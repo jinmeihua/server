@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-Copyright (c) 1995, 2011, Oracle and/or its affiliates. All Rights Reserved.
+Copyright (c) 1995, 2015, Oracle and/or its affiliates. All Rights Reserved.
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -33,16 +33,21 @@ Created Aug 11, 2011 Vasil Dimov
 /** Magic value to use instead of checksums when they are disabled */
 #define BUF_NO_CHECKSUM_MAGIC 0xDEADBEEFUL
 
-/********************************************************************//**
-Calculates a page CRC32 which is stored to the page when it is written
-to a file. Note that we must be careful to calculate the same value on
-32-bit and 64-bit architectures.
-@return	checksum */
+/** Calculates the CRC32 checksum of a page. The value is stored to the page
+when it is written to a file and also checked for a match when reading from
+the file. When reading we allow both normal CRC32 and CRC-legacy-big-endian
+variants. Note that we must be careful to calculate the same value on 32-bit
+and 64-bit architectures.
+@param[in]	page			buffer page (UNIV_PAGE_SIZE bytes)
+@param[in]	use_legacy_big_endian	if true then use big endian
+byteorder when converting byte strings to integers
+@return checksum */
 UNIV_INTERN
-ib_uint32_t
+uint32_t
 buf_calc_page_crc32(
-/*================*/
-	const byte*	page);	/*!< in: buffer page */
+	const byte*	page,
+	bool		use_legacy_big_endian = false)
+	MY_ATTRIBUTE((warn_unused_result));
 
 /********************************************************************//**
 Calculates a page checksum which is stored to the page when it is written

@@ -2,7 +2,7 @@
 
 Copyright (c) 1997, 2017, Oracle and/or its affiliates. All Rights Reserved.
 Copyright (c) 2012, Facebook Inc.
-Copyright (c) 2013, 2017, MariaDB Corporation.
+Copyright (c) 2013, 2018, MariaDB Corporation.
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -931,11 +931,18 @@ log_block_checksum_is_ok_or_old_format(
 #endif /* UNIV_LOG_DEBUG */
 
 	ulint block_checksum = log_block_get_checksum(block);
+	ulint crc32 = log_block_calc_checksum(block);
 
-	if (UNIV_LIKELY(srv_log_checksum_algorithm ==
-			SRV_CHECKSUM_ALGORITHM_NONE ||
-			log_block_calc_checksum(block) == block_checksum)) {
+	if (UNIV_LIKELY(srv_log_checksum_algorithm == SRV_CHECKSUM_ALGORITHM_NONE ||
+		crc32 == block_checksum)) {
+		return(TRUE);
+	}
 
+	ulint crc32_legacy = log_block_calc_checksum_crc32_legacy_big_endian(block);
+
+	if ((srv_log_checksum_algorithm == SRV_CHECKSUM_ALGORITHM_CRC32 ||
+	     srv_log_checksum_algorithm == SRV_CHECKSUM_ALGORITHM_STRICT_CRC32)
+	    && crc32_legacy == block_checksum) {
 		return(TRUE);
 	}
 
@@ -947,15 +954,15 @@ log_block_checksum_is_ok_or_old_format(
 
 		ib_logf(IB_LOG_LEVEL_ERROR,
 			"log block checksum mismatch: expected " ULINTPF ", "
-			"calculated checksum " ULINTPF,
+			"calculated checksum " ULINTPF " legacy " ULINTPF " .",
 			block_checksum,
-			log_block_calc_checksum(block));
+			crc32, crc32_legacy);
 
 		if (block_checksum == LOG_NO_CHECKSUM_MAGIC) {
 
 			algo = "none";
-		} else if (block_checksum ==
-			   log_block_calc_checksum_crc32(block)) {
+		} else if (block_checksum == crc32 ||
+			   block_checksum == crc32_legacy) {
 
 			algo = "crc32";
 		} else if (block_checksum ==
@@ -989,6 +996,7 @@ log_block_checksum_is_ok_or_old_format(
 
 	if (block_checksum == LOG_NO_CHECKSUM_MAGIC ||
 	    block_checksum == log_block_calc_checksum_crc32(block) ||
+	    block_checksum == crc32_legacy ||
 	    block_checksum == log_block_calc_checksum_innodb(block)) {
 
 		return(TRUE);
@@ -1008,10 +1016,11 @@ log_block_checksum_is_ok_or_old_format(
 	}
 
 	if (print_err) {
-		fprintf(stderr, "BROKEN: block: %lu checkpoint: %lu %.8lx %.8lx\n",
+		fprintf(stderr, "BROKEN: block: %lu checkpoint: %lu %.8lx %.8lx %.8lx\n",
 			log_block_get_hdr_no(block),
 			log_block_get_checkpoint_no(block),
-			log_block_calc_checksum(block),
+			crc32,
+			crc32_legacy,
 			log_block_get_checksum(block));
 	}
 

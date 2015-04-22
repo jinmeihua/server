@@ -1,7 +1,7 @@
 /*****************************************************************************
 
 Copyright (c) 1995, 2017, Oracle and/or its affiliates. All Rights Reserved.
-Copyright (c) 2013, 2017, MariaDB Corporation.
+Copyright (c) 2013, 2018, MariaDB Corporation.
 Copyright (c) 2013, 2014, Fusion-io
 
 This program is free software; you can redistribute it and/or modify it under
@@ -708,11 +708,11 @@ buf_flush_update_zip_checksum(
 {
 	ut_a(zip_size > 0);
 
-	ib_uint32_t	checksum = static_cast<ib_uint32_t>(
+	const uint32_t	checksum =
 		page_zip_calc_checksum(
 			page, zip_size,
 			static_cast<srv_checksum_algorithm_t>(
-				srv_checksum_algorithm)));
+				srv_checksum_algorithm));
 
 	mach_write_to_8(page + FIL_PAGE_LSN, lsn);
 	mach_write_to_4(page + FIL_PAGE_SPACE_OR_CHKSUM, checksum);

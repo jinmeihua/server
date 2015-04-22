@@ -2,7 +2,7 @@
 
 Copyright (c) 1995, 2013, Oracle and/or its affiliates. All rights reserved.
 Copyright (c) 2009, Google Inc.
-Copyright (c) 2017, MariaDB Corporation. All Rights Reserved.
+Copyright (c) 2017, 2018, MariaDB Corporation. All Rights Reserved.
 
 Portions of this file contain modifications contributed and copyrighted by
 Google, Inc. Those modifications are gratefully acknowledged and are described

@@ -2,7 +2,7 @@
 
 Copyright (c) 1995, 2016, Oracle and/or its affiliates. All Rights Reserved.
 Copyright (c) 2008, Google Inc.
-Copyright (c) 2013, 2017, MariaDB Corporation.
+Copyright (c) 2013, 2018, MariaDB Corporation.
 
 Portions of this file contain modifications contributed and copyrighted by
 Google, Inc. Those modifications are gratefully acknowledged and are described
@@ -569,7 +569,7 @@ buf_page_is_checksum_valid_crc32(
 	ulint		checksum_field1,
 	ulint		checksum_field2)
 {
-	ib_uint32_t	crc32 = buf_calc_page_crc32(read_buf);
+	const uint32_t crc32 = buf_calc_page_crc32(read_buf);
 
 #ifdef UNIV_INNOCHECKSUM
 	if (log_file
@@ -577,21 +577,35 @@ buf_page_is_checksum_valid_crc32(
 		fprintf(log_file, "page::%llu;"
 			" crc32 calculated = %u;"
 			" recorded checksum field1 = " ULINTPF " recorded"
-			" checksum field2 =" ULINTPF "\n", cur_page_num,
+			" checksum field2 = " ULINTPF "\n", cur_page_num,
 			crc32, checksum_field1, checksum_field2);
 	}
 #endif /* UNIV_INNOCHECKSUM */
 
-	if (!(checksum_field1 == crc32 && checksum_field2 == crc32)) {
+	if (checksum_field1 != checksum_field2) {
 		DBUG_PRINT("buf_checksum",
 			("Page checksum crc32 not valid field1 " ULINTPF
 			 " field2 " ULINTPF " crc32 %u.",
 				checksum_field1, checksum_field2, crc32));
-		return (false);
+		return(false);
 	}
 
+	if (checksum_field1 == crc32) {
+		return(true);
+	}
 
-	return (true);
+	const uint32_t crc32_legacy = buf_calc_page_crc32(read_buf, true);
+
+	if (checksum_field1 == crc32_legacy) {
+		DBUG_PRINT("buf_checksum",
+			("Page checksum crc32 not valid field1 " ULINTPF
+			 " field2 " ULINTPF " crc32 %u legacy %u.",
+				checksum_field1, checksum_field2, crc32,
+				crc32_legacy));
+		return(true);
+	}
+
+	return(false);
 }
 
 /** Checks if the page is in innodb checksum format.
@@ -1066,9 +1080,9 @@ buf_page_print(const byte* read_buf, ulint zip_size)
 			" InnoDB: Compressed page type (" ULINTPF "); "
 			"stored checksum in field1 " ULINTPF "; "
 			"calculated checksums for field1: "
-			"%s " ULINTPF ", "
-			"%s " ULINTPF ", "
-			"%s " ULINTPF "; "
+			"%s %u/%u , "
+			"%s %u , "
+			"%s %u ; "
 			"page LSN " LSN_PF "; "
 			"page number (if stored to page already) " ULINTPF "; "
 			"space id (if stored to page already) " ULINTPF "\n",
@@ -1078,6 +1092,8 @@ buf_page_print(const byte* read_buf, ulint zip_size)
 				SRV_CHECKSUM_ALGORITHM_CRC32),
 			page_zip_calc_checksum(read_buf, zip_size,
 				SRV_CHECKSUM_ALGORITHM_CRC32),
+			page_zip_calc_checksum(read_buf, zip_size,
+				SRV_CHECKSUM_ALGORITHM_CRC32, true),
 			buf_checksum_algorithm_name(
 				SRV_CHECKSUM_ALGORITHM_INNODB),
 			page_zip_calc_checksum(read_buf, zip_size,
@@ -1091,20 +1107,22 @@ buf_page_print(const byte* read_buf, ulint zip_size)
 			mach_read_from_4(read_buf
 					 + FIL_PAGE_ARCH_LOG_NO_OR_SPACE_ID));
 	} else {
+		const uint32_t	crc32 = buf_calc_page_crc32(read_buf);
+
+		const uint32_t	crc32_legacy = buf_calc_page_crc32(read_buf,
+								   true);
 		ut_print_timestamp(stderr);
 		fprintf(stderr, " InnoDB: uncompressed page, "
 			"stored checksum in field1 " ULINTPF ", "
 			"calculated checksums for field1: "
-			"%s " UINT32PF ", "
-			"%s " ULINTPF ", "
-			"%s " ULINTPF ", "
-
+			"%s %u/%u, "
+			"%s " ULINTPF " , "
+			"%s " ULINTPF " , "
 			"stored checksum in field2 " ULINTPF ", "
 			"calculated checksums for field2: "
-			"%s " UINT32PF ", "
-			"%s " ULINTPF ", "
-			"%s " ULINTPF ", "
-
+			"%s %u/%u , "
+			"%s " ULINTPF " , "
+			"%s " ULINTPF " , "
 			"page LSN " ULINTPF " " ULINTPF ", "
 			"low 4 bytes of LSN at page end " ULINTPF ", "
 			"page number (if stored to page already) " ULINTPF ", "
@@ -1112,7 +1130,8 @@ buf_page_print(const byte* read_buf, ulint zip_size)
 			"and stored already) " ULINTPF "\n",
 			mach_read_from_4(read_buf + FIL_PAGE_SPACE_OR_CHKSUM),
 			buf_checksum_algorithm_name(SRV_CHECKSUM_ALGORITHM_CRC32),
-			buf_calc_page_crc32(read_buf),
+			crc32,
+			crc32_legacy,
 			buf_checksum_algorithm_name(SRV_CHECKSUM_ALGORITHM_INNODB),
 			buf_calc_page_new_checksum(read_buf),
 			buf_checksum_algorithm_name(SRV_CHECKSUM_ALGORITHM_NONE),
@@ -1121,7 +1140,8 @@ buf_page_print(const byte* read_buf, ulint zip_size)
 			mach_read_from_4(read_buf + UNIV_PAGE_SIZE
 					 - FIL_PAGE_END_LSN_OLD_CHKSUM),
 			buf_checksum_algorithm_name(SRV_CHECKSUM_ALGORITHM_CRC32),
-			buf_calc_page_crc32(read_buf),
+			crc32,
+			crc32_legacy,
 			buf_checksum_algorithm_name(SRV_CHECKSUM_ALGORITHM_INNODB),
 			buf_calc_page_old_checksum(read_buf),
 			buf_checksum_algorithm_name(SRV_CHECKSUM_ALGORITHM_NONE),
@@ -2687,13 +2707,15 @@ buf_zip_decompress(
 
 		ib_logf(IB_LOG_LEVEL_ERROR,
 			"Compressed page checksum mismatch"
-			" for %s [%u:%u]: stored: " ULINTPF ", crc32: " ULINTPF
-			" innodb: " ULINTPF ", none: " ULINTPF ".",
+			" for %s [%u:%u]: stored: " ULINTPF ", crc32: %u/%u"
+			" innodb: %u, none: %u.",
 			space ? space->chain.start->name : "N/A",
 			block->page.space, block->page.offset,
 			mach_read_from_4(frame + FIL_PAGE_SPACE_OR_CHKSUM),
 			page_zip_calc_checksum(frame, size,
 					       SRV_CHECKSUM_ALGORITHM_CRC32),
+			page_zip_calc_checksum(frame, size,
+					       SRV_CHECKSUM_ALGORITHM_CRC32, true),
 			page_zip_calc_checksum(frame, size,
 					       SRV_CHECKSUM_ALGORITHM_INNODB),
 			page_zip_calc_checksum(frame, size,

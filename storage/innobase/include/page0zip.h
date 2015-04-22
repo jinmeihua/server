@@ -3,7 +3,7 @@
 
 Copyright (c) 2005, 2016, Oracle and/or its affiliates. All Rights Reserved.
 Copyright (c) 2012, Facebook Inc.
-Copyright (c) 2013, 2016, MariaDB Corporation
+Copyright (c) 2013, 2018, MariaDB Corporation
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -463,17 +463,22 @@ page_zip_parse_compress(
 	page_zip_des_t*	page_zip)/*!< out: compressed page */
 	MY_ATTRIBUTE((nonnull(1,2)));
 
-/**********************************************************************//**
-Calculate the compressed page checksum.
-@return	page checksum */
+/** Calculate the compressed page checksum.
+@param[in]	data			compressed page
+@param[in]	size			size of compressed page
+@param[in]	algo			algorithm to use
+@param[in]	use_legacy_big_endian	only used if algo is
+SRV_CHECKSUM_ALGORITHM_CRC32 or SRV_CHECKSUM_ALGORITHM_STRICT_CRC32 - if true
+then use big endian byteorder when converting byte strings to integers.
+@return page checksum */
 UNIV_INTERN
-ulint
+uint32_t
 page_zip_calc_checksum(
-/*===================*/
-        const void*     data,   /*!< in: compressed page */
-        ulint           size,   /*!< in: size of compressed page */
-	srv_checksum_algorithm_t algo) /*!< in: algorithm to use */
-	MY_ATTRIBUTE((nonnull));
+	const void*			data,
+	ulint				size,
+	srv_checksum_algorithm_t	algo,
+	bool				use_legacy_big_endian = false)
+	MY_ATTRIBUTE((warn_unused_result));
 
 /**********************************************************************//**
 Verify a compressed page's checksum.

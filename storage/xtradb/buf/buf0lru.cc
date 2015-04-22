@@ -1978,7 +1978,6 @@ not_freed:
 			 UNIV_PAGE_SIZE);
 
 	if (b) {
-		ib_uint32_t	checksum;
 		/* Compute and stamp the compressed page
 		checksum while not holding any mutex.  The
 		block is already half-freed
@@ -1986,12 +1985,12 @@ not_freed:
 		buf_pool->page_hash, thus inaccessible by any
 		other thread. */
 
-		checksum = static_cast<ib_uint32_t>(
+		const uint32_t checksum =
 			page_zip_calc_checksum(
 				b->zip.data,
 				page_zip_get_size(&b->zip),
 				static_cast<srv_checksum_algorithm_t>(
-					srv_checksum_algorithm)));
+					srv_checksum_algorithm));
 
 		mach_write_to_4(b->zip.data + FIL_PAGE_SPACE_OR_CHKSUM,
 				checksum);

@@ -253,6 +253,20 @@ log_block_calc_checksum_crc32(
 	return(ut_crc32(block, OS_FILE_LOG_BLOCK_SIZE - LOG_BLOCK_TRL_SIZE));
 }
 
+/** Calculates the checksum for a log block using the CRC32 algorithm.
+This function uses big endian byteorder when converting byte strings to
+integers.
+@param[in]	block	log block
+@return checksum */
+UNIV_INLINE
+ulint
+log_block_calc_checksum_crc32_legacy_big_endian(
+	const byte*	block)
+{
+	return(ut_crc32_legacy_big_endian(
+			block, OS_FILE_LOG_BLOCK_SIZE - LOG_BLOCK_TRL_SIZE));
+}
+
 /************************************************************//**
 Calculates the checksum for a log block using the "no-op" algorithm.
 @return	checksum */

@@ -4231,9 +4231,9 @@ String *Field_long::val_str(String *val_buffer,
   j=sint4korr(ptr);
 
   if (unsigned_flag)
-    length=cs->cset->long10_to_str(cs,to,mlength, 10,(long) j);
+    length=cs->cset->long10_to_str(cs,to,mlength, 10,(uint32) j);
   else
-    length=cs->cset->long10_to_str(cs,to,mlength,-10,(long) j);
+    length=cs->cset->long10_to_str(cs,to,mlength,-10,j);
   val_buffer->length(length);
   if (zerofill)
     prepend_zeros(val_buffer);

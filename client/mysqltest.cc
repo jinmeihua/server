@@ -3070,11 +3070,11 @@ void eval_expr(VAR *v, const char *p, const char **p_end,
 
  NO_EVAL:
   {
-    int new_val_len = (p_end && *p_end) ?
-      (int) (*p_end - p) : (int) strlen(p);
+    size_t new_val_len = (p_end && *p_end) ?
+      (size_t)(*p_end - p) : strlen(p);
     if (new_val_len + 1 >= v->alloced_len)
     {
-      static int MIN_VAR_ALLOC= 32;
+      static size_t MIN_VAR_ALLOC= 32;
       v->alloced_len = (new_val_len < MIN_VAR_ALLOC - 1) ?
         MIN_VAR_ALLOC : new_val_len + 1;
       if (!(v->str_val =

@@ -381,7 +381,7 @@ uint explain_filename(THD* thd,
     Table name length.
 */
 
-uint filename_to_tablename(const char *from, char *to, uint to_length, 
+uint filename_to_tablename(const char *from, char *to, size_t to_length, 
                            bool stay_quiet)
 {
   uint errors;
@@ -436,7 +436,7 @@ bool check_mysql50_prefix(const char *name)
     non-0  result string length
 */
 
-uint check_n_cut_mysql50_prefix(const char *from, char *to, uint to_length)
+uint check_n_cut_mysql50_prefix(const char *from, char *to, size_t to_length)
 {
   if (check_mysql50_prefix(from))
     return (uint) (strmake(to, from + MYSQL50_TABLE_NAME_PREFIX_LENGTH,
@@ -465,7 +465,7 @@ static bool check_if_frm_exists(char *path, const char *db, const char *table)
     File name length.
 */
 
-uint tablename_to_filename(const char *from, char *to, uint to_length)
+uint tablename_to_filename(const char *from, char *to, size_t to_length)
 {
   uint errors, length;
   DBUG_ENTER("tablename_to_filename");

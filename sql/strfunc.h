@@ -42,7 +42,7 @@ const char *set_to_string(THD *thd, LEX_CSTRING *result, ulonglong set,
 /*
   These functions were protected by INNODB_COMPATIBILITY_HOOKS
  */
-uint strconvert(CHARSET_INFO *from_cs, const char *from, uint from_length,
-                CHARSET_INFO *to_cs, char *to, uint to_length, uint *errors);
+uint strconvert(CHARSET_INFO *from_cs, const char *from, size_t from_length,
+                CHARSET_INFO *to_cs, char *to, size_t to_length, uint *errors);
 
 #endif /* STRFUNC_INCLUDED */

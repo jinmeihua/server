@@ -3255,12 +3255,12 @@ innobase_invalidate_query_cache(
         tabname_len = filename_to_tablename(++key_ptr,
                                             (qcache_key_name + dbname_len + 1),
                                             sizeof(qcache_key_name) -
-                                            (uint)(dbname_len - 1));
+                                            dbname_len - 1);
 
         /* Argument TRUE below means we are using transactions */
         mysql_query_cache_invalidate4(trx->mysql_thd,
                                       qcache_key_name,
-                                      (uint)(dbname_len + tabname_len + 2),
+                                      uint(dbname_len + tabname_len + 2),
                                       TRUE);
 #endif
 }

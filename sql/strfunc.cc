@@ -265,8 +265,8 @@ uint check_word(TYPELIB *lib, const char *val, const char *end,
 */
 
 
-uint strconvert(CHARSET_INFO *from_cs, const char *from, uint from_length,
-                CHARSET_INFO *to_cs, char *to, uint to_length, uint *errors)
+uint strconvert(CHARSET_INFO *from_cs, const char *from, size_t from_length,
+                CHARSET_INFO *to_cs, char *to, size_t to_length, uint *errors)
 {
   int cnvres;
   my_wc_t wc;

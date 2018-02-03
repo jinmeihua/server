@@ -740,7 +740,7 @@ public:
     name.length= 0;
 #endif
   }		/*lint -e1509 */
-  void set_name(THD *thd, const char *str, uint length, CHARSET_INFO *cs);
+  void set_name(THD *thd, const char *str, size_t length, CHARSET_INFO *cs);
   void set_name_no_truncate(THD *thd, const char *str, uint length,
                             CHARSET_INFO *cs);
   void init_make_field(Send_field *tmp_field,enum enum_field_types type);

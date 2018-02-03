@@ -263,7 +263,7 @@ void option_cleanup(option_string *stmt);
 void concurrency_loop(MYSQL *mysql, uint current, option_string *eptr);
 static int run_statements(MYSQL *mysql, statement *stmt);
 int slap_connect(MYSQL *mysql);
-static int run_query(MYSQL *mysql, const char *query, int len);
+static int run_query(MYSQL *mysql, const char *query, size_t len);
 
 static const char ALPHANUMERICS[]=
   "0123456789ABCDEFGHIJKLMNOPQRSTWXYZabcdefghijklmnopqrstuvwxyz";
@@ -344,7 +344,7 @@ int main(int argc, char **argv)
     srandom((uint)time(NULL));
 
   /* globals? Yes, so we only have to run strlen once */
-  delimiter_length= strlen(delimiter);
+  delimiter_length= (int)strlen(delimiter);
 
   if (argc > 2)
   {
@@ -1552,18 +1552,18 @@ get_options(int *argc,char ***argv)
 }
 
 
-static int run_query(MYSQL *mysql, const char *query, int len)
+static int run_query(MYSQL *mysql, const char *query, size_t len)
 {
   if (opt_only_print)
   {
-    printf("%.*s;\n", len, query);
+    printf("%.*s;\n", (int)len, query);
     return 0;
   }
 
   if (verbose >= 3)
-    printf("%.*s;\n", len, query);
+    printf("%.*s;\n", (int)len, query);
 
-  return mysql_real_query(mysql, query, len);
+  return mysql_real_query(mysql, query, (ulong)len);
 }
 
 
@@ -2131,7 +2131,7 @@ parse_delimiter(const char *script, statement **stmt, char delm)
   char *ptr= (char *)script;
   statement **sptr= stmt;
   statement *tmp;
-  uint length= strlen(script);
+  size_t length= strlen(script);
   uint count= 0; /* We know that there is always one */
 
   for (tmp= *sptr= (statement *)my_malloc(sizeof(statement),

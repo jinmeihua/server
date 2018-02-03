@@ -476,7 +476,8 @@ typedef struct st_io_cache		/* Used when cacheing files */
     "hard" error, and the actual number of I/O-ed bytes if the read/write was
     partial.
   */
-  int	seek_not_done,error;
+  int	seek_not_done;
+  int error;
   /* buffer_length is memory size allocated for buffer or write_buffer */
   size_t	buffer_length;
   /* read_length is the same as buffer_length except when we use async io */
@@ -1046,9 +1047,9 @@ extern size_t escape_quotes_for_mysql(CHARSET_INFO *charset_info,
                                       char *to, size_t to_length,
                                       const char *from, size_t length);
 
-extern void thd_increment_bytes_sent(void *thd, ulong length);
-extern void thd_increment_bytes_received(void *thd, ulong length);
-extern void thd_increment_net_big_packet_count(void *thd, ulong length);
+extern void thd_increment_bytes_sent(void *thd, size_t length);
+extern void thd_increment_bytes_received(void *thd, size_t length);
+extern void thd_increment_net_big_packet_count(void *thd, size_t length);
 
 #ifdef __WIN__
 extern my_bool have_tcpip;		/* Is set if tcpip is used */

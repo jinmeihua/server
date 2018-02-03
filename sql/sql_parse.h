@@ -73,9 +73,9 @@ LEX_USER *create_definer(THD *thd, LEX_CSTRING *user_name, LEX_CSTRING *host_nam
 LEX_USER *get_current_user(THD *thd, LEX_USER *user, bool lock=true);
 bool sp_process_definer(THD *thd);
 bool check_string_byte_length(const LEX_CSTRING *str, uint err_msg,
-                              uint max_byte_length);
+                              size_t max_byte_length);
 bool check_string_char_length(const LEX_CSTRING *str, uint err_msg,
-                              uint max_char_length, CHARSET_INFO *cs,
+                              size_t max_char_length, CHARSET_INFO *cs,
                               bool no_error);
 bool check_ident_length(const LEX_CSTRING *ident);
 CHARSET_INFO* merge_charset_and_collation(CHARSET_INFO *cs, CHARSET_INFO *cl);

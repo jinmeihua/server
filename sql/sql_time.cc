@@ -318,7 +318,7 @@ bool str_to_datetime(CHARSET_INFO *cs, const char *str, uint length,
 
 bool
 str_to_datetime_with_warn(CHARSET_INFO *cs,
-                          const char *str, uint length, MYSQL_TIME *l_time,
+                          const char *str, size_t length, MYSQL_TIME *l_time,
                           ulonglong flags)
 {
   MYSQL_TIME_STATUS status;

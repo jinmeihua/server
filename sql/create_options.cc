@@ -545,7 +545,7 @@ uint engine_option_value::frm_length()
 
     if value.str is NULL, this option is not written to frm (=DEFAULT)
   */
-  return value.str ? 1 + name.length + 2 + value.length : 0;
+  return value.str ? (uint)(1 + name.length + 2 + value.length) : 0;
 }
 
 

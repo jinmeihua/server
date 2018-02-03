@@ -205,7 +205,7 @@ bool init_read_record(READ_RECORD *info,THD *thd, TABLE *table,
   if (addon_field)
   {
     info->rec_buf=    (uchar*) filesort->addon_buf.str;
-    info->ref_length= filesort->addon_buf.length;
+    info->ref_length= (uint)filesort->addon_buf.length;
     info->unpack=     filesort->unpack;
   }
   else

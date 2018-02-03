@@ -2098,7 +2098,7 @@ static int read_and_execute(bool interactive)
       if (opt_outfile && line)
 	fprintf(OUTFILE, "%s\n", line);
 
-      line_length= line ? strlen(line) : 0;
+      line_length= line ? (ulong)strlen(line) : 0;
     }
     // End of file or system error
     if (!line)
@@ -2989,12 +2989,12 @@ static void get_current_db()
  The different commands
 ***************************************************************************/
 
-int mysql_real_query_for_lazy(const char *buf, int length)
+int mysql_real_query_for_lazy(const char *buf, size_t length)
 {
   for (uint retry=0;; retry++)
   {
     int error;
-    if (!mysql_real_query(&mysql,buf,length))
+    if (!mysql_real_query(&mysql,buf,(ulong)length))
       return 0;
     error= put_error(&mysql);
     if (mysql_errno(&mysql) != CR_SERVER_GONE_ERROR || retry > 1 ||
@@ -3618,11 +3618,11 @@ print_table_data(MYSQL_RES *result)
     (void) tee_fputs("|", PAGER);
     for (uint off=0; (field = mysql_fetch_field(result)) ; off++)
     {
-      uint name_length= (uint) strlen(field->name);
-      uint numcells= charset_info->cset->numcells(charset_info,
+      size_t name_length= (uint) strlen(field->name);
+      size_t numcells= charset_info->cset->numcells(charset_info,
                                                   field->name,
                                                   field->name + name_length);
-      uint display_length= field->max_length + name_length - numcells;
+      size_t display_length= field->max_length + name_length - numcells;
       tee_fprintf(PAGER, " %-*s |",(int) MY_MIN(display_length,
                                                 MAX_COLUMN_LENGTH),
                   field->name);
@@ -3643,7 +3643,6 @@ print_table_data(MYSQL_RES *result)
       const char *buffer;
       uint data_length;
       uint field_max_length;
-      uint visible_length;
       uint extra_padding;
 
       if (off)
@@ -3671,7 +3670,7 @@ print_table_data(MYSQL_RES *result)
        We need to find how much screen real-estate we will occupy to know how 
        many extra padding-characters we should send with the printing function.
       */
-      visible_length= charset_info->cset->numcells(charset_info, buffer, buffer + data_length);
+      size_t visible_length= charset_info->cset->numcells(charset_info, buffer, buffer + data_length);
       extra_padding= (uint) (data_length - visible_length);
 
       if (opt_binhex && is_binary_field(field))

@@ -194,7 +194,7 @@ typedef struct st_user_var_events
 {
   user_var_entry *user_var_event;
   char *value;
-  ulong length;
+  size_t length;
   Item_result type;
   uint charset_number;
   bool unsigned_flag;
@@ -775,7 +775,6 @@ typedef struct system_status_var
   ulong ha_savepoint_rollback_count;
   ulong ha_external_lock_count;
 
-  ulong net_big_packet_count;
   ulong opened_tables;
   ulong opened_shares;
   ulong opened_views;               /* +1 opening a view */
@@ -3560,7 +3559,7 @@ public:
     lex_str->length= length;
     return lex_str;
   }
-  LEX_CSTRING *make_lex_string(LEX_CSTRING *lex_str, const char* str, uint length)
+  LEX_CSTRING *make_lex_string(LEX_CSTRING *lex_str, const char* str, size_t length)
   {
     if (!(lex_str->str= strmake_root(mem_root, str, length)))
     {
@@ -3571,7 +3570,7 @@ public:
     return lex_str;
   }
 
-  LEX_CSTRING *make_clex_string(const char* str, uint length)
+  LEX_CSTRING *make_clex_string(const char* str, size_t length)
   {
     LEX_CSTRING *lex_str;
     char *tmp;
@@ -3587,7 +3586,7 @@ public:
   }
 
   // Allocate LEX_STRING for character set conversion
-  bool alloc_lex_string(LEX_STRING *dst, uint length)
+  bool alloc_lex_string(LEX_STRING *dst, size_t length)
   {
     if ((dst->str= (char*) alloc(length)))
       return false;
@@ -5702,7 +5701,7 @@ class user_var_entry
   user_var_entry() {}                         /* Remove gcc warning */
   LEX_CSTRING name;
   char *value;
-  ulong length;
+  size_t length;
   query_id_t update_query_id, used_query_id;
   Item_result type;
   bool unsigned_flag;

@@ -7775,7 +7775,7 @@ err:
 
 bool check_grant_column(THD *thd, GRANT_INFO *grant,
 			const char *db_name, const char *table_name,
-			const char *name, uint length,  Security_context *sctx)
+			const char *name, size_t length,  Security_context *sctx)
 {
   GRANT_TABLE *grant_table;
   GRANT_TABLE *grant_table_role;

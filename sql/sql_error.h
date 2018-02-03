@@ -1240,9 +1240,9 @@ void push_warning_printf(THD *thd, Sql_condition::enum_warning_level level,
 
 bool mysqld_show_warnings(THD *thd, ulong levels_to_show);
 
-uint32 convert_error_message(char *to, uint32 to_length,
+uint32 convert_error_message(char *to, size_t to_length,
                              CHARSET_INFO *to_cs,
-                             const char *from, uint32 from_length,
+                             const char *from, size_t from_length,
                              CHARSET_INFO *from_cs, uint *errors);
 
 extern const LEX_CSTRING warning_level_names[];

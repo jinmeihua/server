@@ -7455,16 +7455,16 @@ bool check_stack_overrun(THD *thd, long margin,
 #define MY_YACC_INIT 1000			// Start with big alloc
 #define MY_YACC_MAX  32000			// Because of 'short'
 
-bool my_yyoverflow(short **yyss, YYSTYPE **yyvs, ulong *yystacksize)
+bool my_yyoverflow(short **yyss, YYSTYPE **yyvs, size_t *yystacksize)
 {
   Yacc_state *state= & current_thd->m_parser_state->m_yacc;
   ulong old_info=0;
   DBUG_ASSERT(state);
-  if ((uint) *yystacksize >= MY_YACC_MAX)
+  if ( *yystacksize >= MY_YACC_MAX)
     return 1;
   if (!state->yacc_yyvs)
     old_info= *yystacksize;
-  *yystacksize= set_zone((*yystacksize)*2,MY_YACC_INIT,MY_YACC_MAX);
+  *yystacksize= set_zone((int)(*yystacksize)*2,MY_YACC_INIT,MY_YACC_MAX);
   if (!(state->yacc_yyvs= (uchar*)
         my_realloc(state->yacc_yyvs,
                    *yystacksize*sizeof(**yyvs),
@@ -9761,7 +9761,7 @@ LEX_USER *create_definer(THD *thd, LEX_CSTRING *user_name,
 */
 
 bool check_string_byte_length(const LEX_CSTRING *str, uint err_msg,
-                              uint max_byte_length)
+                              size_t max_byte_length)
 {
   if (str->length <= max_byte_length)
     return FALSE;
@@ -9791,7 +9791,7 @@ bool check_string_byte_length(const LEX_CSTRING *str, uint err_msg,
 
 
 bool check_string_char_length(const LEX_CSTRING *str, uint err_msg,
-                              uint max_char_length, CHARSET_INFO *cs,
+                              size_t max_char_length, CHARSET_INFO *cs,
                               bool no_error)
 {
   Well_formed_prefix prefix(cs, str->str, str->length, max_char_length);

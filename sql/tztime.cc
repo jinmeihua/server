@@ -166,7 +166,7 @@ static my_bool
 tz_load(const char *name, TIME_ZONE_INFO *sp, MEM_ROOT *storage)
 {
   uchar *p;
-  int read_from_file;
+  ssize_t read_from_file;
   uint i;
   MYSQL_FILE *file;
 
@@ -187,7 +187,7 @@ tz_load(const char *name, TIME_ZONE_INFO *sp, MEM_ROOT *storage)
     uint ttisgmtcnt;
     char *tzinfo_buf;
 
-    read_from_file= mysql_file_fread(file, u.buf, sizeof(u.buf), MYF(MY_WME));
+    read_from_file= (ssize_t)mysql_file_fread(file, u.buf, sizeof(u.buf), MYF(MY_WME));
 
     if (mysql_file_fclose(file, MYF(MY_WME)) != 0)
       return 1;

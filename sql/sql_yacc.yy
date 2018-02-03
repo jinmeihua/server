@@ -80,7 +80,7 @@ int yylex(void *yylval, void *yythd);
 
 #define yyoverflow(A,B,C,D,E,F)               \
   {                                           \
-    ulong val= *(F);                          \
+    size_t val= *(F);                          \
     if (my_yyoverflow((B), (D), &val))        \
     {                                         \
       yyerror(thd, (char*) (A));              \
@@ -897,7 +897,7 @@ Virtual_column_info *add_virtual_expression(THD *thd, Item *expr)
 }
 
 %{
-bool my_yyoverflow(short **a, YYSTYPE **b, ulong *yystacksize);
+bool my_yyoverflow(short **a, YYSTYPE **b, size_t *yystacksize);
 %}
 
 %pure-parser                                    /* We have threads */
@@ -4981,7 +4981,7 @@ size_number:
             uint text_shift_number= 0;
             longlong prefix_number;
             const char *start_ptr= $1.str;
-            uint str_len= $1.length;
+            size_t str_len= $1.length;
             const char *end_ptr= start_ptr + str_len;
             int error;
             prefix_number= my_strtoll10(start_ptr, (char**) &end_ptr, &error);
@@ -10027,7 +10027,7 @@ simple_expr:
         | simple_expr COLLATE_SYM ident_or_text %prec NEG
           {
             Item *i1= new (thd->mem_root) Item_string(thd, $3.str,
-                                                      $3.length,
+                                                      (uint)$3.length,
                                                       thd->charset());
             if (i1 == NULL)
               MYSQL_YYABORT;
@@ -12115,7 +12115,7 @@ opt_key_usage_list:
 
 key_usage_element:
           ident
-          { Select->add_index_hint(thd, $1.str, $1.length); }
+          { Select->add_index_hint(thd, $1.str, (uint)$1.length); }
         | PRIMARY_SYM
           { Select->add_index_hint(thd, "PRIMARY", 7); }
         ;
@@ -12632,19 +12632,19 @@ limit_option:
         }
         | ULONGLONG_NUM
           {
-            $$= new (thd->mem_root) Item_uint(thd, $1.str, $1.length);
+            $$= new (thd->mem_root) Item_uint(thd, $1.str, (uint)$1.length);
             if ($$ == NULL)
               MYSQL_YYABORT;
           }
         | LONG_NUM
           {
-            $$= new (thd->mem_root) Item_uint(thd, $1.str, $1.length);
+            $$= new (thd->mem_root) Item_uint(thd, $1.str, (uint)$1.length);
             if ($$ == NULL)
               MYSQL_YYABORT;
           }
         | NUM
           {
-            $$= new (thd->mem_root) Item_uint(thd, $1.str, $1.length);
+            $$= new (thd->mem_root) Item_uint(thd, $1.str, (uint)$1.length);
             if ($$ == NULL)
               MYSQL_YYABORT;
           }
@@ -14639,7 +14639,7 @@ hex_or_bin_String:
           HEX_NUM
           {
             Item *tmp= new (thd->mem_root) Item_hex_hybrid(thd, $1.str,
-                                                           $1.length);
+                                                           (uint)$1.length);
             if (tmp == NULL)
               MYSQL_YYABORT;
             /*
@@ -14652,7 +14652,7 @@ hex_or_bin_String:
         | HEX_STRING
           {
             Item *tmp= new (thd->mem_root) Item_hex_string(thd, $1.str,
-                                                           $1.length);
+                                                           (uint)$1.length);
             if (tmp == NULL)
               MYSQL_YYABORT;
             tmp->quick_fix_field();
@@ -14661,7 +14661,7 @@ hex_or_bin_String:
         | BIN_NUM
           {
             Item *tmp= new (thd->mem_root) Item_bin_string(thd, $1.str,
-                                                           $1.length);
+                                                           (uint)$1.length);
             if (tmp == NULL)
               MYSQL_YYABORT;
             /*
@@ -14724,19 +14724,19 @@ literal:
           }
         | HEX_NUM
           {
-            $$= new (thd->mem_root) Item_hex_hybrid(thd, $1.str, $1.length);
+            $$= new (thd->mem_root) Item_hex_hybrid(thd, $1.str,(uint) $1.length);
             if ($$ == NULL)
               MYSQL_YYABORT;
           }
         | HEX_STRING
           {
-            $$= new (thd->mem_root) Item_hex_string(thd, $1.str, $1.length);
+            $$= new (thd->mem_root) Item_hex_string(thd, $1.str, (uint)$1.length);
             if ($$ == NULL)
               MYSQL_YYABORT;
           }
         | BIN_NUM
           {
-            $$= new (thd->mem_root) Item_bin_string(thd, $1.str, $1.length);
+            $$= new (thd->mem_root) Item_bin_string(thd, $1.str, (uint)$1.length);
             if ($$ == NULL)
               MYSQL_YYABORT;
           }
@@ -14764,7 +14764,7 @@ NUM_literal:
             $$= new (thd->mem_root)
                   Item_int(thd, $1.str,
                            (longlong) my_strtoll10($1.str, NULL, &error),
-                           $1.length);
+                           (uint)$1.length);
             if ($$ == NULL)
               MYSQL_YYABORT;
           }
@@ -14774,19 +14774,19 @@ NUM_literal:
             $$= new (thd->mem_root)
                   Item_int(thd, $1.str,
                            (longlong) my_strtoll10($1.str, NULL, &error),
-                           $1.length);
+                           (uint)$1.length);
             if ($$ == NULL)
               MYSQL_YYABORT;
           }
         | ULONGLONG_NUM
           {
-            $$= new (thd->mem_root) Item_uint(thd, $1.str, $1.length);
+            $$= new (thd->mem_root) Item_uint(thd, $1.str, (uint)$1.length);
             if ($$ == NULL)
               MYSQL_YYABORT;
           }
         | DECIMAL_NUM
           {
-            $$= new (thd->mem_root) Item_decimal(thd, $1.str, $1.length,
+            $$= new (thd->mem_root) Item_decimal(thd, $1.str, (uint)$1.length,
                                                    thd->charset());
             if (($$ == NULL) || (thd->is_error()))
             {
@@ -14795,7 +14795,7 @@ NUM_literal:
           }
         | FLOAT_NUM
           {
-            $$= new (thd->mem_root) Item_float(thd, $1.str, $1.length);
+            $$= new (thd->mem_root) Item_float(thd, $1.str, (uint)$1.length);
             if (($$ == NULL) || (thd->is_error()))
             {
               MYSQL_YYABORT;
@@ -14807,19 +14807,19 @@ NUM_literal:
 temporal_literal:
         DATE_SYM TEXT_STRING
           {
-            if (!($$= create_temporal_literal(thd, $2.str, $2.length, YYCSCL,
+            if (!($$= create_temporal_literal(thd, $2.str, (uint)$2.length, YYCSCL,
                                               MYSQL_TYPE_DATE, true)))
               MYSQL_YYABORT;
           }
         | TIME_SYM TEXT_STRING
           {
-            if (!($$= create_temporal_literal(thd, $2.str, $2.length, YYCSCL,
+            if (!($$= create_temporal_literal(thd, $2.str, (uint)$2.length, YYCSCL,
                                               MYSQL_TYPE_TIME, true)))
               MYSQL_YYABORT;
           }
         | TIMESTAMP TEXT_STRING
           {
-            if (!($$= create_temporal_literal(thd, $2.str, $2.length, YYCSCL,
+            if (!($$= create_temporal_literal(thd, $2.str, (uint)$2.length, YYCSCL,
                                               MYSQL_TYPE_DATETIME, true)))
               MYSQL_YYABORT;
           }
@@ -15082,7 +15082,7 @@ IDENT_sys:
             if (thd->charset_is_system_charset)
             {
               CHARSET_INFO *cs= system_charset_info;
-              uint wlen= Well_formed_prefix(cs, $1.str, $1.length).length();
+              size_t wlen= Well_formed_prefix(cs, $1.str, $1.length).length();
               if (wlen < $1.length)
               {
                 ErrConvString err($1.str, $1.length, &my_charset_bin);
@@ -15096,7 +15096,7 @@ IDENT_sys:
             {
               LEX_STRING to;
               if (thd->convert_with_error(system_charset_info, &to,
-                                          thd->charset(), $1.str, $1.length))
+                                          thd->charset(), $1.str, (uint)$1.length))
                 MYSQL_YYABORT;
               $$.str=    to.str;
 	      $$.length= to.length;
@@ -15113,7 +15113,7 @@ TEXT_STRING_sys:
             {
               LEX_STRING to;
               if (thd->convert_string(&to, system_charset_info,
-                                  $1.str, $1.length, thd->charset()))
+                                  $1.str, (uint)$1.length, thd->charset()))
                 MYSQL_YYABORT;
               $$.str=    to.str;
 	      $$.length= to.length;
@@ -15130,7 +15130,7 @@ TEXT_STRING_literal:
             {
               LEX_STRING to;
               if (thd->convert_string(&to, thd->variables.collation_connection,
-                                  $1.str, $1.length, thd->charset()))
+                                  $1.str, (uint)$1.length, thd->charset()))
                 MYSQL_YYABORT;
               $$.str=    to.str;
 	      $$.length= to.length;
@@ -15148,7 +15148,7 @@ TEXT_STRING_filesystem:
               LEX_STRING to;
               if (thd->convert_string(&to,
                                       thd->variables.character_set_filesystem,
-                                      $1.str, $1.length, thd->charset()))
+                                      $1.str, (uint)$1.length, thd->charset()))
                 MYSQL_YYABORT;
               $$.str=    to.str;
 	      $$.length= to.length;

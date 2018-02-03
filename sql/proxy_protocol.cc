@@ -230,7 +230,7 @@ int parse_proxy_protocol_header(NET *net, proxy_peer_info *peer_info)
       They will be treated as IPv4.
     */
     sockaddr_storage tmp;
-    int dst_len;
+    size_t dst_len;
     memset(&tmp, 0, sizeof(tmp));
     vio_get_normalized_ip((const struct sockaddr *)&peer_info->peer_addr,
       sizeof(sockaddr_storage), (struct sockaddr *)&tmp, &dst_len);
@@ -464,9 +464,9 @@ bool is_proxy_protocol_allowed(const sockaddr *addr)
     case AF_INET:
     case AF_INET6:
       {
-      int len=
+      size_t len=
         (addr->sa_family == AF_INET)?sizeof(sockaddr_in):sizeof (sockaddr_in6);
-      int dst_len;
+      size_t dst_len;
       vio_get_normalized_ip(addr, len,normalized_addr, &dst_len);
       }
       break;

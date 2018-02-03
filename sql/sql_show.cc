@@ -1627,7 +1627,7 @@ static const char *require_quotes(const char *name, uint name_length)
 */
 
 bool
-append_identifier(THD *thd, String *packet, const char *name, uint length)
+append_identifier(THD *thd, String *packet, const char *name, size_t length)
 {
   const char *name_end;
   char quote_char;
@@ -1706,7 +1706,7 @@ append_identifier(THD *thd, String *packet, const char *name, uint length)
     #	  Quote character
 */
 
-int get_quote_char_for_identifier(THD *thd, const char *name, uint length)
+int get_quote_char_for_identifier(THD *thd, const char *name, size_t length)
 {
   if (length &&
       !is_keyword(name,length) &&

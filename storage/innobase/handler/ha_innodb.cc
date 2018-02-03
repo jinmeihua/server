@@ -3255,12 +3255,12 @@ innobase_invalidate_query_cache(
         tabname_len = filename_to_tablename(++key_ptr,
                                             (qcache_key_name + dbname_len + 1),
                                             sizeof(qcache_key_name) -
-                                            dbname_len - 1);
+                                            (uint)(dbname_len - 1));
 
         /* Argument TRUE below means we are using transactions */
         mysql_query_cache_invalidate4(trx->mysql_thd,
                                       qcache_key_name,
-                                      (dbname_len + tabname_len + 2),
+                                      (uint)(dbname_len + tabname_len + 2),
                                       TRUE);
 #endif
 }
@@ -6254,8 +6254,8 @@ no_such_table:
 		DBUG_RETURN(HA_ERR_NO_SUCH_TABLE);
 	}
 
-	uint n_fields = mysql_fields(table);
-	uint n_cols = dict_table_get_n_user_cols(ib_table)
+	size_t n_fields = mysql_fields(table);
+	size_t n_cols = dict_table_get_n_user_cols(ib_table)
 		+ dict_table_get_n_v_cols(ib_table)
 		- !!DICT_TF2_FLAG_IS_SET(ib_table, DICT_TF2_FTS_HAS_DOC_ID);
 
@@ -21851,7 +21851,7 @@ innobase_convert_to_filename_charset(
 	CHARSET_INFO*	cs_from = system_charset_info;
 
 	return(static_cast<uint>(strconvert(
-				cs_from, from, strlen(from),
+				cs_from, from, uint(strlen(from)),
 				cs_to, to, static_cast<uint>(len), &errors)));
 }
 
@@ -21870,7 +21870,7 @@ innobase_convert_to_system_charset(
 	CHARSET_INFO*	cs2 = system_charset_info;
 
 	return(static_cast<uint>(strconvert(
-				cs1, from, strlen(from),
+				cs1, from, static_cast<uint>(strlen(from)),
 				cs2, to, static_cast<uint>(len), errors)));
 }
 

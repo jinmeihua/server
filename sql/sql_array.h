@@ -204,7 +204,7 @@ public:
   void elements(size_t num_elements)
   {
     DBUG_ASSERT(num_elements <= array.max_element);
-    array.elements= num_elements;
+    array.elements= (uint)num_elements;
   }
 
   void clear()

@@ -1037,7 +1037,7 @@ uchar *query_cache_query_get_key(const uchar *record, size_t *length,
 /**
   libmysql convenience wrapper to insert data into query cache.
 */
-void query_cache_insert(void *thd_arg, const char *packet, ulong length,
+void query_cache_insert(void *thd_arg, const char *packet, size_t length,
                         unsigned pkt_nr)
 {
   THD *thd= (THD*) thd_arg;
@@ -1053,7 +1053,7 @@ void query_cache_insert(void *thd_arg, const char *packet, ulong length,
     return;
 
   query_cache.insert(thd, &thd->query_cache_tls,
-                     packet, length,
+                     packet, (ulong)length,
                      pkt_nr);
 }
 

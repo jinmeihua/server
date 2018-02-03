@@ -1172,7 +1172,7 @@ bool Item::check_type_scalar(const char *opname) const
 }
 
 
-void Item::set_name(THD *thd, const char *str, uint length, CHARSET_INFO *cs)
+void Item::set_name(THD *thd, const char *str, size_t length, CHARSET_INFO *cs)
 {
   if (!length)
   {
@@ -2757,7 +2757,7 @@ const char *
 Item_sp::func_name(THD *thd) const
 {
   /* Calculate length to avoid reallocation of string for sure */
-  uint len= (((m_name->m_explicit_name ? m_name->m_db.length : 0) +
+  size_t len= (((m_name->m_explicit_name ? m_name->m_db.length : 0) +
               m_name->m_name.length)*2 + //characters*quoting
              2 +                         // ` and `
              (m_name->m_explicit_name ?

@@ -40,6 +40,11 @@ IF (WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 4)
   SKIP_ROCKSDB_PLUGIN("32-Bit Windows are temporarily disabled")
 ENDIF()
 
+# Temporarily, disable size to uint conversion warnings
+IF(MSVC AND CMAKE_SIZE_OF_VOIDP EQUAL 8)
+  ADD_DEFINITIONS(/wd4267)
+ENDIF()
+
 # This plugin needs recent C++ compilers (it is using C++11 features)
 # Skip build for the old compilers
 SET(CXX11_FLAGS)

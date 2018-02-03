@@ -1203,7 +1203,7 @@ public:
   /* The number of seconds the query took to run on the master. */
   ulong exec_time;
   /* Number of bytes written by write() function */
-  ulong data_written;
+  size_t data_written;
 
   /*
     The master's server id (is preserved in the relay log; used to
@@ -1364,10 +1364,10 @@ public:
   static void operator delete(void*, void*) { }
 
 #ifdef MYSQL_SERVER
-  bool write_header(ulong data_length);
-  bool write_data(const uchar *buf, ulong data_length)
+  bool write_header(size_t event_data_length);
+  bool write_data(const uchar *buf, size_t data_length)
   { return writer->write_data(buf, data_length); }
-  bool write_data(const char *buf, ulong data_length)
+  bool write_data(const char *buf, size_t data_length)
   { return write_data((uchar*)buf, data_length); }
   bool write_footer()
   { return writer->write_footer(); }
@@ -3050,9 +3050,9 @@ public:
     UNSIGNED_F= 1
   };
   const char *name;
-  uint name_len;
+  size_t name_len;
   const char *val;
-  ulong val_len;
+  size_t val_len;
   Item_result type;
   uint charset_number;
   bool is_null;
@@ -3060,8 +3060,8 @@ public:
 #ifdef MYSQL_SERVER
   bool deferred;
   query_id_t query_id;
-  User_var_log_event(THD* thd_arg, const char *name_arg, uint name_len_arg,
-                     const char *val_arg, ulong val_len_arg, Item_result type_arg,
+  User_var_log_event(THD* thd_arg, const char *name_arg, size_t name_len_arg,
+                     const char *val_arg, size_t val_len_arg, Item_result type_arg,
 		     uint charset_number_arg, uchar flags_arg,
                      bool using_trans, bool direct)
     :Log_event(thd_arg, 0, using_trans),
@@ -3864,7 +3864,7 @@ public:
   bool is_valid() const { return 1; }
 };
 #endif
-char *str_to_hex(char *to, const char *from, uint len);
+char *str_to_hex(char *to, const char *from, size_t len);
 
 /**
   @class Annotate_rows_log_event

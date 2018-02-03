@@ -31,7 +31,7 @@ class NAMED_ILIST: public I_List<NAMED_ILINK>
 {
   public:
   void delete_elements(void (*free_element)(const char*, uchar*));
-  bool delete_element(const char *name, uint length, void (*free_element)(const char*, uchar*));
+  bool delete_element(const char *name, size_t length, void (*free_element)(const char*, uchar*));
 };
 
 /* For key cache */
@@ -39,9 +39,9 @@ extern LEX_CSTRING default_key_cache_base;
 extern KEY_CACHE zero_key_cache;
 extern NAMED_ILIST key_caches;
 
-KEY_CACHE *create_key_cache(const char *name, uint length);
+KEY_CACHE *create_key_cache(const char *name, size_t length);
 KEY_CACHE *get_key_cache(const LEX_CSTRING *cache_name);
-KEY_CACHE *get_or_create_key_cache(const char *name, uint length);
+KEY_CACHE *get_or_create_key_cache(const char *name, size_t length);
 void free_key_cache(const char *name, KEY_CACHE *key_cache);
 bool process_key_caches(process_key_cache_t func, void *param);
 

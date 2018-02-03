@@ -65,7 +65,7 @@ static int user_variables_fill(THD *thd, TABLE_LIST *tables, COND *cond)
   {
     user_var_entry *var= (user_var_entry*) my_hash_element(&thd->user_vars, i);
 
-    field[0]->store(var->name.str, var->name.length, system_charset_info);
+    field[0]->store(var->name.str, (uint)var->name.length, system_charset_info);
 
     if (var->val_str(&is_null, &buff, NOT_FIXED_DEC))
     {
@@ -80,11 +80,11 @@ static int user_variables_fill(THD *thd, TABLE_LIST *tables, COND *cond)
     const LEX_CSTRING *tmp= var->unsigned_flag ?
                             &unsigned_result_types[var->type] :
                             &result_types[var->type];
-    field[2]->store(tmp->str, tmp->length, system_charset_info);
+    field[2]->store(tmp->str, (uint)tmp->length, system_charset_info);
 
     if (var->charset())
     {
-      field[3]->store(var->charset()->csname, strlen(var->charset()->csname),
+      field[3]->store(var->charset()->csname, (uint)strlen(var->charset()->csname),
                       system_charset_info);
       field[3]->set_notnull();
     }

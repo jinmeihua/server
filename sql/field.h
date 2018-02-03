@@ -216,7 +216,7 @@ protected:
                              my_decimal *buf)
     {
       DBUG_ASSERT(length < UINT_MAX32);
-      m_error= str2my_decimal(mask, str, (uint) length, cs,
+      m_error= str2my_decimal(mask, str, length, cs,
                               buf, (const char **) &m_end_of_num);
       // E_DEC_TRUNCATED means a very minor truncation: '1e-100' -> 0
       m_edom= m_error && m_error != E_DEC_TRUNCATED;
@@ -825,6 +825,19 @@ public:
   */
   virtual bool memcpy_field_possible(const Field *from) const= 0;
   virtual int  store(const char *to, uint length,CHARSET_INFO *cs)=0;
+
+#ifdef _WIN64
+   /* Windows : workaround truncation warning c4267, size_t to int */
+  int store(const char *to, size_t length,CHARSET_INFO *cs)
+  { return store(to, (uint)length, system_charset_info); }
+
+  int store(const char *to, int length,CHARSET_INFO *cs)
+  { return store(to, (uint)length, system_charset_info); }
+
+  int store(const char *to, ulong length,CHARSET_INFO *cs)
+  { return store(to, (uint)length, system_charset_info); }
+#endif
+
   virtual int  store_hex_hybrid(const char *str, uint length);
   virtual int  store(double nr)=0;
   virtual int  store(longlong nr, bool unsigned_val)=0;
@@ -3546,9 +3559,10 @@ public:
   void reset_fields() { bzero((uchar*) &value,sizeof(value)); bzero((uchar*) &read_value,sizeof(read_value)); }
   uint32 get_field_buffer_size(void) { return value.alloced_length(); }
   void store_length(uchar *i_ptr, uint i_packlength, uint32 i_number);
-  inline void store_length(uint32 number)
+  inline void store_length(size_t number)
   {
-    store_length(ptr, packlength, number);
+    DBUG_ASSERT(number < UINT_MAX32);
+    store_length(ptr, packlength, (uint32)number);
   }
   inline uint32 get_length(uint row_offset= 0) const
   { return get_length(ptr+row_offset, this->packlength); }

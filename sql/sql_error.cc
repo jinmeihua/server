@@ -918,8 +918,8 @@ char *err_conv(char *buff, uint to_length, const char *from,
    length of converted string
 */
 
-uint32 convert_error_message(char *to, uint32 to_length, CHARSET_INFO *to_cs,
-                             const char *from, uint32 from_length,
+uint32 convert_error_message(char *to, size_t to_length, CHARSET_INFO *to_cs,
+                             const char *from, size_t from_length,
                              CHARSET_INFO *from_cs, uint *errors)
 {
   int         cnvres;

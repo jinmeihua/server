@@ -656,10 +656,8 @@ my_socket vio_fd(Vio* vio)
   @param dst_length [out] actual length of the normalized IP address.
 */
 
-void vio_get_normalized_ip(const struct sockaddr *src,
-                                  int src_length,
-                                  struct sockaddr *dst,
-                                  int *dst_length)
+void vio_get_normalized_ip(const struct sockaddr *src, size_t src_length,
+                                  struct sockaddr *dst, size_t * dst_length)
 {
   switch (src->sa_family) {
   case AF_INET:
@@ -732,14 +730,13 @@ void vio_get_normalized_ip(const struct sockaddr *src,
   @retval FALSE on success.
 */
 
-my_bool vio_get_normalized_ip_string(const struct sockaddr *addr,
-                                     int addr_length,
+my_bool vio_get_normalized_ip_string(const struct sockaddr *addr, size_t addr_length,
                                      char *ip_string,
                                      size_t ip_string_size)
 {
   struct sockaddr_storage norm_addr_storage;
   struct sockaddr *norm_addr= (struct sockaddr *) &norm_addr_storage;
-  int norm_addr_length;
+  size_t norm_addr_length;
   int err_code;
 
   vio_get_normalized_ip(addr, addr_length, norm_addr, &norm_addr_length);

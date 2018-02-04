@@ -523,8 +523,7 @@ Warning_info::~Warning_info()
 }
 
 
-bool Warning_info::has_sql_condition(const char *message_str,
-                                     ulong message_length) const
+bool Warning_info::has_sql_condition(const char *message_str, size_t message_length) const
 {
   Diagnostics_area::Sql_condition_iterator it(m_warn_list);
   const Sql_condition *err;
@@ -922,7 +921,7 @@ size_t convert_error_message(char *to, size_t to_length, CHARSET_INFO *to_cs,
                              const char *from, size_t from_length,
                              CHARSET_INFO *from_cs, uint *errors)
 {
-  size_t  cnvres;
+  int  cnvres;
   my_wc_t     wc;
   const uchar *from_end= (const uchar*) from+from_length;
   char *to_start= to;
@@ -969,7 +968,7 @@ size_t convert_error_message(char *to, size_t to_length, CHARSET_INFO *to_cs,
       length= (wc <= 0xFFFF) ? 6/* '\1234' format*/ : 9 /* '\+123456' format*/;
       if ((uchar*)(to + length) >= to_end)
         break;
-      cnvres= my_snprintf(to, 9,
+      cnvres= (int)my_snprintf(to, 9,
                           (wc <= 0xFFFF) ? "\\%04X" : "\\+%06X", (uint) wc);
       to+= cnvres;
     }

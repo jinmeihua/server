@@ -163,38 +163,38 @@ sp_pcontext *sp_pcontext::pop_context()
 }
 
 
-size_t sp_pcontext::diff_handlers(const sp_pcontext *ctx, bool exclusive) const
+uint sp_pcontext::diff_handlers(const sp_pcontext *ctx, bool exclusive) const
 {
-  size_t n= 0;
+  uint n= 0;
   const sp_pcontext *pctx= this;
   const sp_pcontext *last_ctx= NULL;
 
   while (pctx && pctx != ctx)
   {
-    n+= pctx->m_handlers.elements();
+    n+= (uint)pctx->m_handlers.elements();
     last_ctx= pctx;
     pctx= pctx->parent_context();
   }
   if (pctx)
-    return (exclusive && last_ctx ? n - last_ctx->m_handlers.elements() : n);
+    return (exclusive && last_ctx ? n -(uint) last_ctx->m_handlers.elements() : n);
   return 0;			// Didn't find ctx
 }
 
 
-size_t sp_pcontext::diff_cursors(const sp_pcontext *ctx, bool exclusive) const
+uint sp_pcontext::diff_cursors(const sp_pcontext *ctx, bool exclusive) const
 {
-  size_t n= 0;
+  uint n= 0;
   const sp_pcontext *pctx= this;
   const sp_pcontext *last_ctx= NULL;
 
   while (pctx && pctx != ctx)
   {
-    n+= pctx->m_cursors.elements();
+    n+= (uint)pctx->m_cursors.elements();
     last_ctx= pctx;
     pctx= pctx->parent_context();
   }
   if (pctx)
-    return  (exclusive && last_ctx ? n - last_ctx->m_cursors.elements() : n);
+    return  (exclusive && last_ctx ? (uint)(n - last_ctx->m_cursors.elements()) : n);
   return 0;			// Didn't find ctx
 }
 

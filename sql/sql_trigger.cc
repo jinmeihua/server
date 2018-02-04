@@ -654,7 +654,7 @@ static void build_trig_stmt_query(THD *thd, TABLE_LIST *tables,
 {
   LEX_CSTRING stmt_definition;
   LEX *lex= thd->lex;
-  uint prefix_trimmed, suffix_trimmed;
+  size_t prefix_trimmed, suffix_trimmed;
   size_t original_length;
 
   /*

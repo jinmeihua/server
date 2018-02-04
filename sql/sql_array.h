@@ -191,9 +191,10 @@ public:
     return *((Elem*)pop_dynamic(&array));
   }
 
-  void del(uint idx)
+  void del(size_t idx)
   {
-    delete_dynamic_element(&array, idx);
+    DBUG_ASSERT(idx <= array.max_element);
+    delete_dynamic_element(&array, (uint)idx);
   }
 
   size_t elements() const

@@ -404,7 +404,7 @@ public:
   /// this one.  If 'exclusive' is true, don't count the last scope we are
   /// leaving; this is used for LEAVE where we will jump to the hpop
   /// instructions.
-  size_t diff_handlers(const sp_pcontext *ctx, bool exclusive) const;
+  uint diff_handlers(const sp_pcontext *ctx, bool exclusive) const;
 
   /// Calculate and return the number of cursors to pop between the given
   /// context and this one.
@@ -416,7 +416,7 @@ public:
   /// this one.  If 'exclusive' is true, don't count the last scope we are
   /// leaving; this is used for LEAVE where we will jump to the cpop
   /// instructions.
-  size_t diff_cursors(const sp_pcontext *ctx, bool exclusive) const;
+  uint diff_cursors(const sp_pcontext *ctx, bool exclusive) const;
 
   /////////////////////////////////////////////////////////////////////////
   // SP-variables (parameters and variables).

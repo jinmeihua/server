@@ -591,7 +591,7 @@ private:
     @return true if the Warning_info contains an SQL-condition with the given
     message.
   */
-  bool has_sql_condition(const char *message_str, ulong message_length) const;
+  bool has_sql_condition(const char *message_str, size_t message_length) const;
 
   /**
     Reset the warning information. Clear all warnings,
@@ -1089,7 +1089,7 @@ public:
   ulong current_statement_warn_count() const
   { return get_warning_info()->current_statement_warn_count(); }
 
-  bool has_sql_condition(const char *message_str, ulong message_length) const
+  bool has_sql_condition(const char *message_str, size_t message_length) const
   { return get_warning_info()->has_sql_condition(message_str, message_length); }
 
   void reset_for_next_command()

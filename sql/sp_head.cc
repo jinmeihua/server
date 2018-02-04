@@ -603,7 +603,6 @@ sp_head::set_stmt_end(THD *thd)
 {
   Lex_input_stream *lip= & thd->m_parser_state->m_lip; /* shortcut */
   const char *end_ptr= lip->get_cpp_ptr(); /* shortcut */
-  uint not_used;
 
   /* Make the string of parameters. */
 
@@ -621,7 +620,7 @@ sp_head::set_stmt_end(THD *thd)
 
   m_body.length= end_ptr - m_body_begin;
   m_body.str= thd->strmake(m_body_begin, m_body.length);
-  trim_whitespace(thd->charset(), &m_body, &not_used);
+  trim_whitespace(thd->charset(), &m_body);
 
   /* Make the string of UTF-body. */
 
@@ -629,7 +628,7 @@ sp_head::set_stmt_end(THD *thd)
 
   m_body_utf8.length= lip->get_body_utf8_length();
   m_body_utf8.str= thd->strmake(lip->get_body_utf8_str(), m_body_utf8.length);
-  trim_whitespace(thd->charset(), &m_body_utf8, &not_used);
+  trim_whitespace(thd->charset(), &m_body_utf8);
 
   /*
     Make the string of whole stored-program-definition query (in the
@@ -638,7 +637,7 @@ sp_head::set_stmt_end(THD *thd)
 
   m_defstr.length= end_ptr - lip->get_cpp_buf();
   m_defstr.str= thd->strmake(lip->get_cpp_buf(), m_defstr.length);
-  trim_whitespace(thd->charset(), &m_defstr, &not_used);
+  trim_whitespace(thd->charset(), &m_defstr);
 }
 
 
@@ -2330,7 +2329,7 @@ sp_head::backpatch_goto(THD *thd, sp_label *lab,sp_label *lab_begin_block)
       }
       if (bp->instr_type == CPOP)
       {
-        size_t n= lab->ctx->diff_cursors(lab_begin_block->ctx, true);
+        uint n= lab->ctx->diff_cursors(lab_begin_block->ctx, true);
         if (n == 0)
         {
           // Remove cpop instr
@@ -2347,7 +2346,7 @@ sp_head::backpatch_goto(THD *thd, sp_label *lab,sp_label *lab_begin_block)
       }
       if (bp->instr_type == HPOP)
       {
-        size_t n= lab->ctx->diff_handlers(lab_begin_block->ctx, true);
+        uint n= lab->ctx->diff_handlers(lab_begin_block->ctx, true);
         if (n == 0)
         {
           // Remove hpop instr

@@ -87,7 +87,7 @@ static void fix_type_pointers(const char ***array, TYPELIB *point_to_type,
 			      uint types, char **names);
 static uint find_field(Field **fields, uchar *record, uint start, uint length);
 
-inline bool is_system_table_name(const char *name, uint length);
+inline bool is_system_table_name(const char *name, size_t length);
 
 /**************************************************************************
   Object_creation_ctx implementation.
@@ -508,7 +508,7 @@ void free_table_share(TABLE_SHARE *share)
   and should not contain user tables.
 */
 
-inline bool is_system_table_name(const char *name, uint length)
+inline bool is_system_table_name(const char *name, size_t length)
 {
   CHARSET_INFO *ci= system_charset_info;
 
@@ -3853,7 +3853,7 @@ void append_unescaped(String *res, const char *pos, size_t length)
 void prepare_frm_header(THD *thd, uint reclength, uchar *fileinfo,
                         HA_CREATE_INFO *create_info, uint keys, KEY *key_info)
 {
-  ulong key_comment_total_bytes= 0;
+  size_t key_comment_total_bytes= 0;
   uint i;
   DBUG_ENTER("prepare_frm_header");
 
@@ -4089,7 +4089,7 @@ bool ok_for_lower_case_names(const char *name)
 bool check_db_name(LEX_STRING *org_name)
 {
   char *name= org_name->str;
-  uint name_length= org_name->length;
+  size_t name_length= org_name->length;
   bool check_for_path_chars;
 
   if ((check_for_path_chars= check_mysql50_prefix(name)))
@@ -8935,7 +8935,7 @@ void vers_select_conds_t::resolve_units(bool timestamps_only)
 
 Field *TABLE::find_field_by_name(LEX_CSTRING *str) const
 {
-  uint length= str->length;
+  size_t length= str->length;
   for (Field **tmp= field; *tmp; tmp++)
   {
     if ((*tmp)->field_name.length == length &&

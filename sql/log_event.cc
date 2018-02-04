@@ -8393,7 +8393,7 @@ err:
   fully contruct the event object.
 */
 bool
-Gtid_list_log_event::peek(const char *event_start, uint32 event_len,
+Gtid_list_log_event::peek(const char *event_start, size_t event_len,
                           enum enum_binlog_checksum_alg checksum_alg,
                           rpl_gtid **out_gtid_list, uint32 *out_list_len,
                           const Format_description_log_event *fdev)

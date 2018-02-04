@@ -177,12 +177,12 @@ bool parse_date_time_format(timestamp_type format_type,
                             const char *format, uint format_length,
                             DATE_TIME_FORMAT *date_time_format);
 /* Character set-aware version of str_to_time() */
-bool str_to_time(CHARSET_INFO *cs, const char *str,uint length,
+bool str_to_time(CHARSET_INFO *cs, const char *str,size_t length,
                  MYSQL_TIME *l_time, ulonglong fuzzydate,
                  MYSQL_TIME_STATUS *status);
 /* Character set-aware version of str_to_datetime() */
 bool str_to_datetime(CHARSET_INFO *cs,
-                     const char *str, uint length,
+                     const char *str, size_t length,
                      MYSQL_TIME *l_time, ulonglong flags,
                      MYSQL_TIME_STATUS *status);
 

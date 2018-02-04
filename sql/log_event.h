@@ -3519,7 +3519,7 @@ public:
   virtual int do_apply_event(rpl_group_info *rgi);
   enum_skip_reason do_shall_skip(rpl_group_info *rgi);
 #endif
-  static bool peek(const char *event_start, uint32 event_len,
+  static bool peek(const char *event_start, size_t event_len,
                    enum enum_binlog_checksum_alg checksum_alg,
                    rpl_gtid **out_gtid_list, uint32 *out_list_len,
                    const Format_description_log_event *fdev);

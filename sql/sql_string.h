@@ -97,8 +97,8 @@ public:
     Convert a string between character sets.
     "dstcs" and "srccs" cannot be &my_charset_bin.
   */
-  size_t convert_fix(CHARSET_INFO *dstcs, char *dst, uint dst_length,
-                     CHARSET_INFO *srccs, const char *src, uint src_length,
+  size_t convert_fix(CHARSET_INFO *dstcs, char *dst, size_t dst_length,
+                     CHARSET_INFO *srccs, const char *src, size_t src_length,
                      uint nchars)
   {
     return my_convert_fix(dstcs, dst, dst_length,
@@ -107,9 +107,8 @@ public:
   /*
      Copy a string. Fix bad bytes/characters to '?'.
   */
-  uint well_formed_copy(CHARSET_INFO *to_cs, char *to, uint to_length,
-                        CHARSET_INFO *from_cs, const char *from,
-                        uint from_length, uint nchars);
+  uint well_formed_copy(CHARSET_INFO *to_cs, char *to, size_t to_length,
+                        CHARSET_INFO *from_cs, const char *from, size_t from_length, size_t nchars);
   // Same as above, but without the "nchars" limit.
   uint well_formed_copy(CHARSET_INFO *to_cs, char *to, uint to_length,
                         CHARSET_INFO *from_cs, const char *from,
@@ -603,7 +602,7 @@ public:
                  ls->length == strlen(ls->str)));
     qs_append(ls->str, (uint32)ls->length);
   }
-  void qs_append(const char *str, uint32 len);
+  void qs_append(const char *str, size_t len);
   void qs_append_hex(const char *str, uint32 len);
   void qs_append(double d);
   void qs_append(double *d);
@@ -664,7 +663,7 @@ public:
       print_with_conversion(to, cs);
   }
 
-  bool append_for_single_quote(const char *st, uint len);
+  bool append_for_single_quote(const char *st, size_t len);
   bool append_for_single_quote(const String *s)
   {
     return append_for_single_quote(s->ptr(), s->length());

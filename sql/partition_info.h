@@ -388,7 +388,7 @@ private:
                                          const char *part_name);
   // FIXME: prune_partition_bitmaps() is duplicate of set_read_partitions()
   bool prune_partition_bitmaps(List<String> *partition_names);
-  bool add_named_partition(const char *part_name, uint length);
+  bool add_named_partition(const char *part_name, size_t length);
 public:
   bool set_read_partitions(List<char> *partition_names);
   bool has_unique_name(partition_element *element);

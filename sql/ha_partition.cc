@@ -5102,7 +5102,7 @@ end_dont_reset_start_part:
 void ha_partition::position(const uchar *record)
 {
   handler *file= m_file[m_last_part];
-  uint pad_length;
+  size_t pad_length;
   DBUG_ASSERT(bitmap_is_set(&(m_part_info->read_partitions), m_last_part));
   DBUG_ENTER("ha_partition::position");
 
@@ -5217,7 +5217,7 @@ bool ha_partition::init_record_priority_queue()
   */
   if (!m_ordered_rec_buffer)
   {
-    uint alloc_len;
+    size_t alloc_len;
     uint used_parts= bitmap_bits_set(&m_part_info->read_partitions);
     DBUG_ASSERT(used_parts > 0);
     /* Allocate record buffer for each used partition. */

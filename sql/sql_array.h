@@ -220,12 +220,12 @@ public:
   bool resize(size_t new_size, Elem default_val)
   {
     size_t old_size= elements();
-    if (allocate_dynamic(&array, new_size))
+    if (allocate_dynamic(&array, (uint)new_size))
       return true;
     
     if (new_size > old_size)
     {
-      set_dynamic(&array, (uchar*)&default_val, new_size - 1);
+      set_dynamic(&array, (uchar*)&default_val, (uint)(new_size - 1));
       /*for (size_t i= old_size; i != new_size; i++)
       {
         at(i)= default_val;

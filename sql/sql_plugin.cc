@@ -730,7 +730,8 @@ static st_plugin_dl *plugin_dl_add(const LEX_CSTRING *dl, int report)
 {
 #ifdef HAVE_DLOPEN
   char dlpath[FN_REFLEN];
-  uint plugin_dir_len, dummy_errors, i;
+  size_t plugin_dir_len,i;
+  uint dummy_errors;
   struct st_plugin_dl *tmp= 0, plugin_dl;
   void *sym;
   st_ptr_backup tmp_backup[array_elements(list_of_services)];
@@ -2885,7 +2886,7 @@ static st_bookmark *find_bookmark(const char *plugin, const char *name,
                                   int flags)
 {
   st_bookmark *result= NULL;
-  uint namelen, length, pluginlen= 0;
+  size_t namelen, length, pluginlen= 0;
   char *varname, *p;
 
   if (!(flags & PLUGIN_VAR_THDLOCAL))
@@ -2941,7 +2942,7 @@ static size_t var_storage_size(int flags)
 static st_bookmark *register_var(const char *plugin, const char *name,
                                  int flags)
 {
-  uint length= strlen(plugin) + strlen(name) + 3, size, offset, new_size;
+  size_t length= strlen(plugin) + strlen(name) + 3, size, offset, new_size;
   st_bookmark *result;
   char *varname, *p;
 
@@ -3694,7 +3695,7 @@ static int construct_options(MEM_ROOT *mem_root, struct st_plugin_int *tmp,
 {
   const char *plugin_name= tmp->plugin->name;
   const LEX_CSTRING plugin_dash = { STRING_WITH_LEN("plugin-") };
-  uint plugin_name_len= strlen(plugin_name);
+  size_t plugin_name_len= strlen(plugin_name);
   uint optnamelen;
   const int max_comment_len= 180;
   char *comment= (char *) alloc_root(mem_root, max_comment_len + 1);

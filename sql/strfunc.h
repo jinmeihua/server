@@ -24,7 +24,7 @@ ulonglong find_set_from_flags(TYPELIB *lib, uint default_name,
                               ulonglong cur_set, ulonglong default_set,
                               const char *str, uint length, CHARSET_INFO *cs,
                               char **err_pos, uint *err_len, bool *set_warning);
-uint find_type(const TYPELIB *lib, const char *find, uint length,
+uint find_type(const TYPELIB *lib, const char *find, size_t length,
                bool part_match);
 uint find_type2(const TYPELIB *lib, const char *find, uint length,
                 CHARSET_INFO *cs);

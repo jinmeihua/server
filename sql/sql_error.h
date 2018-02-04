@@ -1240,7 +1240,7 @@ void push_warning_printf(THD *thd, Sql_condition::enum_warning_level level,
 
 bool mysqld_show_warnings(THD *thd, ulong levels_to_show);
 
-uint32 convert_error_message(char *to, size_t to_length,
+size_t convert_error_message(char *to, size_t to_length,
                              CHARSET_INFO *to_cs,
                              const char *from, size_t from_length,
                              CHARSET_INFO *from_cs, uint *errors);

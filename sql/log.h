@@ -1124,7 +1124,7 @@ bool general_log_print(THD *thd, enum enum_server_command command,
                        const char *format,...);
 
 bool general_log_write(THD *thd, enum enum_server_command command,
-                       const char *query, uint query_length);
+                       const char *query, size_t query_length);
 
 void binlog_report_wait_for(THD *thd, THD *other_thd);
 void sql_perror(const char *message);

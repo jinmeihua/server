@@ -2114,7 +2114,7 @@ public:
 
 #ifdef MYSQL_SERVER
 
-  Query_log_event(THD* thd_arg, const char* query_arg, ulong query_length,
+  Query_log_event(THD* thd_arg, const char* query_arg, size_t query_length,
                   bool using_trans, bool direct, bool suppress_use, int error);
   const char* get_db() { return db; }
 #ifdef HAVE_REPLICATION

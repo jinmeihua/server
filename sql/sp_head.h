@@ -1601,14 +1601,14 @@ class sp_instr_hpop : public sp_instr
 
 public:
 
-  sp_instr_hpop(uint ip, sp_pcontext *ctx, uint count)
+  sp_instr_hpop(uint ip, sp_pcontext *ctx, size_t count)
     : sp_instr(ip, ctx), m_count(count)
   {}
 
   virtual ~sp_instr_hpop()
   {}
 
-  void update_count(uint count)
+  void update_count(size_t count)
   {
     m_count= count;
   }
@@ -1619,7 +1619,7 @@ public:
 
 private:
 
-  uint m_count;
+  size_t m_count;
 
 }; // class sp_instr_hpop : public sp_instr
 
@@ -1705,7 +1705,7 @@ public:
   virtual ~sp_instr_cpop()
   {}
 
-  void update_count(uint count)
+  void update_count(size_t count)
   {
     m_count= count;
   }
@@ -1716,7 +1716,7 @@ public:
 
 private:
 
-  uint m_count;
+  size_t m_count;
 
 }; // class sp_instr_cpop : public sp_instr
 

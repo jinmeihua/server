@@ -6168,7 +6168,7 @@ LEX::sp_block_with_exceptions_finalize_exceptions(THD *thd,
 
 bool LEX::sp_change_context(THD *thd, const sp_pcontext *ctx, bool exclusive)
 {
-  uint n;
+  size_t n;
   uint ip= sphead->instructions();
   if ((n= spcont->diff_handlers(ctx, exclusive)))
   {

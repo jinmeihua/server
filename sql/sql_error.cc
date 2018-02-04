@@ -918,11 +918,11 @@ char *err_conv(char *buff, uint to_length, const char *from,
    length of converted string
 */
 
-uint32 convert_error_message(char *to, size_t to_length, CHARSET_INFO *to_cs,
+size_t convert_error_message(char *to, size_t to_length, CHARSET_INFO *to_cs,
                              const char *from, size_t from_length,
                              CHARSET_INFO *from_cs, uint *errors)
 {
-  int         cnvres;
+  size_t  cnvres;
   my_wc_t     wc;
   const uchar *from_end= (const uchar*) from+from_length;
   char *to_start= to;
@@ -930,7 +930,7 @@ uint32 convert_error_message(char *to, size_t to_length, CHARSET_INFO *to_cs,
   my_charset_conv_mb_wc mb_wc= from_cs->cset->mb_wc;
   my_charset_conv_wc_mb wc_mb;
   uint error_count= 0;
-  uint length;
+  size_t length;
 
   DBUG_ASSERT(to_length > 0);
   /* Make room for the null terminator. */
@@ -979,7 +979,7 @@ uint32 convert_error_message(char *to, size_t to_length, CHARSET_INFO *to_cs,
 
   *to= 0;
   *errors= error_count;
-  return (uint32) (to - to_start);
+  return (size_t) (to - to_start);
 }
 
 

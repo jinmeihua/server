@@ -87,7 +87,7 @@ bool mysql_test_parse_for_slave(THD *thd,char *inBuf,uint length);
 bool sqlcom_can_generate_row_events(const THD *thd);
 bool is_update_query(enum enum_sql_command command);
 bool is_log_table_write_query(enum enum_sql_command command);
-bool alloc_query(THD *thd, const char *packet, uint packet_length);
+bool alloc_query(THD *thd, const char *packet, size_t packet_length);
 void mysql_init_select(LEX *lex);
 void mysql_parse(THD *thd, char *rawbuf, uint length,
                  Parser_state *parser_state, bool is_com_multi,

@@ -770,10 +770,10 @@ int String::reserve(size_t space_needed, size_t grow_by)
   return FALSE;
 }
 
-void String::qs_append(const char *str, uint32 len)
+void String::qs_append(const char *str, size_t len)
 {
   memcpy(Ptr + str_length, str, len + 1);
-  str_length += len;
+  str_length += (uint32)len;
 }
 
 void String::qs_append(double d)
@@ -1072,10 +1072,9 @@ my_copy_with_hex_escaping(CHARSET_INFO *cs,
 */
 uint
 String_copier::well_formed_copy(CHARSET_INFO *to_cs,
-                                char *to, uint to_length,
+                                char *to, size_t to_length,
                                 CHARSET_INFO *from_cs,
-                                const char *from, uint from_length,
-                                uint nchars)
+                                const char *from, size_t from_length, size_t nchars)
 {
   if ((to_cs == &my_charset_bin) || 
       (from_cs == &my_charset_bin) ||
@@ -1098,7 +1097,7 @@ String_copier::well_formed_copy(CHARSET_INFO *to_cs,
   Does not add the enclosing quotes, this is left up to caller.
 */
 #define APPEND(X)   if (append(X)) return 1; else break
-bool String::append_for_single_quote(const char *st, uint len)
+bool String::append_for_single_quote(const char *st, size_t len)
 {
   const char *end= st+len;
   for (; st < end; st++)

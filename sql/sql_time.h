@@ -121,8 +121,7 @@ void make_truncated_value_warning(THD *thd,
                                   const char *field_name);
 
 static inline void make_truncated_value_warning(THD *thd,
-                Sql_condition::enum_warning_level level, const char *str_val,
-                uint str_length, timestamp_type time_type,
+                Sql_condition::enum_warning_level level, const char *str_val, size_t str_length, timestamp_type time_type,
                 const char *field_name)
 {
   const ErrConvString str(str_val, str_length, &my_charset_bin);

@@ -190,7 +190,7 @@ Rpl_filter *get_rpl_filter(LEX_CSTRING *filter_name)
                                    filter_name->str, filter_name->length, 0));
 }
 
-Rpl_filter *create_rpl_filter(const char *name, uint length)
+Rpl_filter *create_rpl_filter(const char *name, size_t length)
 {
   Rpl_filter *filter;
   DBUG_ENTER("create_rpl_filter");
@@ -209,7 +209,7 @@ Rpl_filter *create_rpl_filter(const char *name, uint length)
 }
 
 
-Rpl_filter *get_or_create_rpl_filter(const char *name, uint length)
+Rpl_filter *get_or_create_rpl_filter(const char *name, size_t length)
 {
   LEX_CSTRING rpl_filter_name;
   Rpl_filter *filter;

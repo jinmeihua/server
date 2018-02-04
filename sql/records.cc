@@ -212,7 +212,7 @@ bool init_read_record(READ_RECORD *info,THD *thd, TABLE *table,
   {
     empty_record(table);
     info->record= table->record[0];
-    info->ref_length= table->file->ref_length;
+    info->ref_length= (uint)table->file->ref_length;
   }
   info->select=select;
   info->print_error=print_error;

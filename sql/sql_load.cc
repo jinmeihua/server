@@ -824,7 +824,7 @@ static bool write_execute_load_query_log_event(THD *thd, sql_exchange* ex,
     force in a LOCAL if there was one in the original.
   */
   if (thd->lex->local_file)
-    lle.set_fname_outside_temp_buf(ex->file_name, strlen(ex->file_name));
+    lle.set_fname_outside_temp_buf(ex->file_name, (uint)strlen(ex->file_name));
 
   query_str.length(0);
   if (!thd->db.str || strcmp(db_arg, thd->db.str))

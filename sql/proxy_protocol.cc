@@ -210,7 +210,7 @@ int parse_proxy_protocol_header(NET *net, proxy_peer_info *peer_info)
   {
 #define PROXY_V2_HEADER_LEN 16
     /* read off 16 bytes of the header.*/
-    long len= vio_read(vio, hdr + pos, PROXY_V2_HEADER_LEN - pos);
+    ssize_t len= vio_read(vio, hdr + pos, PROXY_V2_HEADER_LEN - pos);
     if (len < 0)
       return -1;
     // 2 last bytes are the length in network byte order of the part following header
@@ -218,6 +218,8 @@ int parse_proxy_protocol_header(NET *net, proxy_peer_info *peer_info)
     if (trail_len > sizeof(hdr) - PROXY_V2_HEADER_LEN)
       return -1;
     len= vio_read(vio,  hdr + PROXY_V2_HEADER_LEN, trail_len);
+    if (len < 0)
+      return -1;
     pos= PROXY_V2_HEADER_LEN + trail_len;
     if (parse_v2_header(hdr, pos, peer_info))
       return -1;

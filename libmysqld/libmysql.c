@@ -3490,7 +3490,7 @@ static void fetch_float_with_conversion(MYSQL_BIND *param, MYSQL_FIELD *field,
       bfill((char*) buff, field->length - len, '0');
       len= field->length;
     }
-    fetch_string_with_conversion(param, buff, len);
+    fetch_string_with_conversion(param, buff, (uint)len);
 
     break;
   }

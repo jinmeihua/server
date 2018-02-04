@@ -1,5 +1,5 @@
 /* Copyright (c) 2005, 2017, Oracle and/or its affiliates.
-   Copyright (c) 2009, 2017, SkySQL Ab.
+   Copyright (c) 2009, 2018, MariaDB Corporation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -4431,7 +4431,8 @@ uint prep_alter_part_table(THD *thd, TABLE *table, Alter_info *alter_info,
       !thd->lex->part_info->num_columns)
     thd->lex->part_info->num_columns= 1; // to make correct clone
 
-  if ((thd->work_part_info= thd->lex->part_info) &&
+  /* thd->work_part_info was assigned in handle_if_exists_option() */
+  if (thd->work_part_info &&
       !(thd->work_part_info= thd->lex->part_info->get_clone(thd)))
     DBUG_RETURN(TRUE);
 

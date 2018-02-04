@@ -813,7 +813,11 @@ st_select_lex_unit *With_element::clone_parsed_spec(THD *thd,
     goto err;
   lex_start(thd);
   with_select= &lex->select_lex;
+#if 0 // Sanja FIXME: resolve this MDEV-14857 conflict
   with_select->select_number= ++thd->select_number;
+#else
+  with_select->select_number= 0;
+#endif
   parse_status= parse_sql(thd, &parser_state, 0);
   if (parse_status)
     goto err;

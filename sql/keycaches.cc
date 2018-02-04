@@ -194,7 +194,7 @@ Rpl_filter *create_rpl_filter(const char *name, size_t length)
 {
   Rpl_filter *filter;
   DBUG_ENTER("create_rpl_filter");
-  DBUG_PRINT("enter",("name: %.*s", length, name));
+  DBUG_PRINT("enter",("name: %.*s", (int)length, name));
   
   filter= new Rpl_filter;
   if (filter) 

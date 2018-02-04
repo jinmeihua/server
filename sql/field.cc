@@ -7284,7 +7284,7 @@ uchar *Field_string::pack(uchar *to, const uchar *from, uint max_length)
 {
   size_t length=      MY_MIN(field_length,max_length);
   size_t local_char_length= max_length/field_charset->mbmaxlen;
-  DBUG_PRINT("debug", ("Packing field '%s' - length: %u ", field_name.str,
+  DBUG_PRINT("debug", ("Packing field '%s' - length: %zu ", field_name.str,
                        length));
 
   if (length > local_char_length)
@@ -8755,7 +8755,7 @@ uint gis_field_options_image(uchar *buff, List<Create_field> &create_fields)
 }
 
 
-uint gis_field_options_read(const uchar *buf, uint buf_len,
+uint gis_field_options_read(const uchar *buf, size_t buf_len,
       Field_geom::storage_type *st_type,uint *precision, uint *scale, uint *srid)
 {
   const uchar *buf_end= buf + buf_len;

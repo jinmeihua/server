@@ -2658,7 +2658,7 @@ bool ha_partition::create_handler_file(const char *name)
   DBUG_ENTER("create_handler_file");
 
   num_parts= m_part_info->partitions.elements;
-  DBUG_PRINT("enter", ("table name: %s  num_parts: %u", name, num_parts));
+  DBUG_PRINT("enter", ("table name: %s  num_parts: %zu", name, num_parts));
   tot_name_len= 0;
   for (i= 0; i < num_parts; i++)
   {

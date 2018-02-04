@@ -13633,7 +13633,7 @@ static int old_password_authenticate(MYSQL_PLUGIN_VIO *vio,
                                      MYSQL_SERVER_AUTH_INFO *info)
 {
   uchar *pkt;
-  size_t pkt_len;
+  int pkt_len;
   MPVIO_EXT *mpvio= (MPVIO_EXT *) vio;
   THD *thd=info->thd;
 
@@ -13660,7 +13660,7 @@ static int old_password_authenticate(MYSQL_PLUGIN_VIO *vio,
     We need to figure out the correct scramble length here.
   */
   if (pkt_len == SCRAMBLE_LENGTH_323 + 1)
-    pkt_len= strnlen((char*)pkt, pkt_len);
+    pkt_len= (int)strnlen((char*)pkt, pkt_len);
 
   if (pkt_len == 0) /* no password */
     return info->auth_string[0] ? CR_AUTH_USER_CREDENTIALS : CR_OK;

@@ -279,7 +279,7 @@ int main(int argc __attribute__((unused)),
             errno);
     exit(1);
   }
-  DBUG_PRINT("info", ("Page cache %d pages", pagen));
+  DBUG_PRINT("info", ("Page cache %zd pages", pagen));
   {
     unsigned char *buffr= malloc(TEST_PAGE_SIZE);
     memset(buffr, '\0', TEST_PAGE_SIZE);

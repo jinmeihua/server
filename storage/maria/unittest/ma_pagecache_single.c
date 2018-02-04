@@ -810,7 +810,7 @@ int main(int argc __attribute__((unused)),
             errno);
     exit(1);
   }
-  DBUG_PRINT("info", ("Page cache %d pages", pagen));
+  DBUG_PRINT("info", ("Page cache %zd pages", pagen));
 
   pthread_mutex_lock(&LOCK_thread_count);
   param=(int*) malloc(sizeof(int));

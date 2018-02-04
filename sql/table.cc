@@ -1192,7 +1192,7 @@ int TABLE_SHARE::init_from_binary_frm_image(THD *thd, bool write,
   uint vcol_screen_length, UNINIT_VAR(options_len);
   uchar *vcol_screen_pos;
   const uchar *options= 0;
-  uint UNINIT_VAR(gis_options_len);
+  size_t UNINIT_VAR(gis_options_len);
   const uchar *gis_options= 0;
   KEY first_keyinfo;
   uint len;

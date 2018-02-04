@@ -1704,7 +1704,7 @@ bool Log_event::write_header(size_t event_data_length)
   uchar header[LOG_EVENT_HEADER_LEN];
   ulong now;
   DBUG_ENTER("Log_event::write_header");
-  DBUG_PRINT("enter", ("filepos: %lld  length: %lu type: %d",
+  DBUG_PRINT("enter", ("filepos: %lld  length: %zu type: %d",
                        (longlong) writer->pos(), event_data_length,
                        (int) get_type_code()));
 

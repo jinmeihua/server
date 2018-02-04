@@ -3084,7 +3084,7 @@ Query_cache::append_result_data(Query_cache_block **current_block,
   if (success && last_block_free_space > 0)
   {
     size_t to_copy = MY_MIN(data_len,last_block_free_space);
-    DBUG_PRINT("qcache", ("use free space %lub at block %p to copy %lub",
+    DBUG_PRINT("qcache", ("use free space %zub at block %p to copy %zub",
 			last_block_free_space,last_block, to_copy));
     memcpy((uchar*) last_block + last_block->used, data, to_copy);
     last_block->used+=to_copy;
@@ -3471,7 +3471,7 @@ Query_cache::insert_table(THD *thd, size_t key_len, const char *key,
                           my_bool hash)
 {
   DBUG_ENTER("Query_cache::insert_table");
-  DBUG_PRINT("qcache", ("insert table node %p, len %d",
+  DBUG_PRINT("qcache", ("insert table node %p, len %zu",
 		     node, key_len));
 
   Query_cache_block *table_block=
@@ -4657,14 +4657,14 @@ void Query_cache::bins_dump()
     return;
   }
 
-  DBUG_PRINT("qcache", ("mem_bin_num=%u, mem_bin_steps=%u",
+  DBUG_PRINT("qcache", ("mem_bin_num=%zu, mem_bin_steps=%zu",
 		      mem_bin_num, mem_bin_steps));
   DBUG_PRINT("qcache", ("-------------------------"));
   DBUG_PRINT("qcache", ("      size idx       step"));
   DBUG_PRINT("qcache", ("-------------------------"));
   for (i=0; i < mem_bin_steps; i++)
   {
-    DBUG_PRINT("qcache", ("%10lu %3d %10lu", steps[i].size, steps[i].idx,
+    DBUG_PRINT("qcache", ("%10zu %3zd %10zu", steps[i].size, steps[i].idx,
 			steps[i].increment));
   }
   DBUG_PRINT("qcache", ("-------------------------"));
@@ -4672,7 +4672,7 @@ void Query_cache::bins_dump()
   DBUG_PRINT("qcache", ("-------------------------"));
   for (i=0; i < mem_bin_num; i++)
   {
-    DBUG_PRINT("qcache", ("%10lu %3d %p", bins[i].size, bins[i].number,
+    DBUG_PRINT("qcache", ("%10zu %3d %p", bins[i].size, bins[i].number,
 			&(bins[i])));
     if (bins[i].free_blocks)
     {
@@ -4705,7 +4705,7 @@ void Query_cache::cache_dump()
   do
   {
     DBUG_PRINT("qcache",
-	       ("%10lu %10lu %1d %2d %p %p %p %p %p",
+	       ("%10zu %10zu %1d %2d %p %p %p %p %p",
 		i->length, i->used, (int)i->type,
 		i->n_tables,i,
 		i->next,i->prev,i->pnext,

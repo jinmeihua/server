@@ -35,7 +35,7 @@
 #include <mysys_err.h>
 
 LEX_CSTRING *make_lex_string(LEX_CSTRING *lex_str,
-                             const char* str, uint length,
+                             const char* str, size_t length,
                              MEM_ROOT *mem_root)
 {
   if (!(lex_str->str= strmake_root(mem_root, str, length)))

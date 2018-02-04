@@ -3764,7 +3764,7 @@ public:
 };
 
 uint gis_field_options_image(uchar *buff, List<Create_field> &create_fields);
-uint gis_field_options_read(const uchar *buf, uint buf_len,
+uint gis_field_options_read(const uchar *buf, size_t buf_len,
       Field_geom::storage_type *st_type,uint *precision, uint *scale, uint *srid);
 
 #endif /*HAVE_SPATIAL*/

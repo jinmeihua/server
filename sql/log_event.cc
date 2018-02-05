@@ -3074,7 +3074,7 @@ Rows_log_event::print_verbose_one_row(IO_CACHE *file, table_def *td,
     if (my_b_printf(file, "%s", prefix))
       goto err;
 
-  for (uint i= 0; i < (int)td->size(); i ++)
+  for (uint i= 0; i < (uint)td->size(); i ++)
   {
     size_t size;
     int is_null= (null_bits[null_bit_index / 8] 

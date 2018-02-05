@@ -110,9 +110,8 @@ public:
   uint well_formed_copy(CHARSET_INFO *to_cs, char *to, size_t to_length,
                         CHARSET_INFO *from_cs, const char *from, size_t from_length, size_t nchars);
   // Same as above, but without the "nchars" limit.
-  uint well_formed_copy(CHARSET_INFO *to_cs, char *to, uint to_length,
-                        CHARSET_INFO *from_cs, const char *from,
-                        uint from_length)
+  uint well_formed_copy(CHARSET_INFO *to_cs, char *to, size_t to_length,
+                        CHARSET_INFO *from_cs, const char *from, size_t from_length)
   {
     return well_formed_copy(to_cs, to, to_length,
                             from_cs, from, from_length,
@@ -440,7 +439,7 @@ public:
   static bool needs_conversion(size_t arg_length,
   			       CHARSET_INFO *cs_from, CHARSET_INFO *cs_to,
 			       uint32 *offset);
-  static bool needs_conversion_on_storage(uint32 arg_length,
+  static bool needs_conversion_on_storage(size_t arg_length,
                                           CHARSET_INFO *cs_from,
                                           CHARSET_INFO *cs_to);
   bool copy_aligned(const char *s, size_t arg_length, uint32 offset,

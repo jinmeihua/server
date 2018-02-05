@@ -45,7 +45,7 @@
 
 static const char field_separator=',';
 
-ulonglong find_set(TYPELIB *lib, const char *str, uint length, CHARSET_INFO *cs,
+ulonglong find_set(TYPELIB *lib, const char *str, size_t length, CHARSET_INFO *cs,
                    char **err_pos, uint *err_len, bool *set_warning)
 {
   CHARSET_INFO *strip= cs ? cs : &my_charset_latin1;
@@ -152,7 +152,7 @@ uint find_type(const TYPELIB *lib, const char *find, size_t length,
     >0  Offset+1 in typelib for matched string
 */
 
-uint find_type2(const TYPELIB *typelib, const char *x, uint length,
+uint find_type2(const TYPELIB *typelib, const char *x, size_t length,
                 CHARSET_INFO *cs)
 {
   int pos;

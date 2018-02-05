@@ -300,7 +300,7 @@ bool String::needs_conversion(size_t arg_length,
 
   @return conversion needed
 */
-bool String::needs_conversion_on_storage(uint32 arg_length,
+bool String::needs_conversion_on_storage(size_t arg_length,
                                          CHARSET_INFO *cs_from,
                                          CHARSET_INFO *cs_to)
 {

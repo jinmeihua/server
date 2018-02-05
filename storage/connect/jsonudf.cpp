@@ -184,7 +184,7 @@ my_bool JSNX::SetArrayOptions(PGLOBAL g, char *p, int i, PSZ nm)
 			// Set concat intermediate string
 			p[n - 1] = 0;
 
-			if (trace)
+			if (trace(1))
 				htrc("Concat string=%s\n", p + 1);
 
 			jnp->CncVal = AllocateValue(g, p + 1, TYPE_STRING);
@@ -248,7 +248,7 @@ my_bool JSNX::ParseJpath(PGLOBAL g)
 		//	Jpath = Name;
 		return true;
 
-	if (trace)
+	if (trace(1))
 		htrc("ParseJpath %s\n", SVP(Jpath));
 
 	if (!(pbuf = PlgDBDup(g, Jpath)))
@@ -311,7 +311,7 @@ my_bool JSNX::ParseJpath(PGLOBAL g)
 	Nod = i;
 	MulVal = AllocateValue(g, Value);
 
-	if (trace)
+	if (trace(1))
 		for (i = 0; i < Nod; i++)
 			htrc("Node(%d) Key=%s Op=%d Rank=%d\n",
 				i, SVP(Nodes[i].Key), Nodes[i].Op, Nodes[i].Rank);
@@ -508,13 +508,13 @@ PVAL JSNX::CalculateArray(PGLOBAL g, PJAR arp, int n)
 
 	vp->Reset();
 
-	if (trace)
+	if (trace(1))
 		htrc("CalculateArray size=%d op=%d\n", ars, op);
 
 	for (i = 0; i < ars; i++) {
 		jvrp = arp->GetValue(i);
 
-		if (trace)
+		if (trace(1))
 			htrc("i=%d nv=%d\n", i, nv);
 
 		if (!jvrp->IsNull() || (op == OP_CNC && GetJsonNull())) {
@@ -527,7 +527,7 @@ PVAL JSNX::CalculateArray(PGLOBAL g, PJAR arp, int n)
 			} else
 				jvp = jvrp;
 
-			if (trace)
+			if (trace(1))
 				htrc("jvp=%s null=%d\n",
 					jvp->GetString(g), jvp->IsNull() ? 1 : 0);
 
@@ -563,7 +563,7 @@ PVAL JSNX::CalculateArray(PGLOBAL g, PJAR arp, int n)
 				if (err)
 					vp->Reset();
 
-				if (trace) {
+				if (trace(1)) {
 					char buf(32);
 
 					htrc("vp='%s' err=%d\n",
@@ -3222,7 +3222,7 @@ char *jsonget_string(UDF_INIT *initid, UDF_ARGS *args, char *result,
 			g->Activityp = (PACTIVITY)str;
 
 	} catch (int n) {
-	  if (trace)
+	  if (trace(1))
 		  htrc("Exception %d: %s\n", n, g->Message);
 
 		PUSH_WARNING(g->Message);
@@ -3563,7 +3563,7 @@ char *jsonlocate(UDF_INIT *initid, UDF_ARGS *args, char *result,
 			g->Activityp = (PACTIVITY)path;
 
 	} catch (int n) {
-	  if (trace)
+	  if (trace(1))
 		  htrc("Exception %d: %s\n", n, g->Message);
 
 		PUSH_WARNING(g->Message);
@@ -3688,7 +3688,7 @@ char *json_locate_all(UDF_INIT *initid, UDF_ARGS *args, char *result,
 			g->Activityp = (PACTIVITY)path;
 
 	} catch (int n) {
-		if (trace)
+		if (trace(1))
 			htrc("Exception %d: %s\n", n, g->Message);
 
 		PUSH_WARNING(g->Message);
@@ -3963,7 +3963,7 @@ char *handle_item(UDF_INIT *initid, UDF_ARGS *args, char *result,
 			g->Activityp = (PACTIVITY)str;
 
 	} catch (int n) {
-	  if (trace)
+	  if (trace(1))
 		  htrc("Exception %d: %s\n", n, g->Message);
 
 		PUSH_WARNING(g->Message);

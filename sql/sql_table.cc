@@ -1131,7 +1131,8 @@ static int execute_ddl_log_action(THD *thd, DDL_LOG_ENTRY *ddl_log_entry)
              ddl_log_entry->tmp_name));
   handler_name.str= (char*)ddl_log_entry->handler_name;
   handler_name.length= strlen(ddl_log_entry->handler_name);
-  init_sql_alloc(&mem_root, TABLE_ALLOC_BLOCK_SIZE, 0, MYF(MY_THREAD_SPECIFIC));
+  init_sql_alloc(&mem_root, "execute_ddl_log_action", TABLE_ALLOC_BLOCK_SIZE,
+                 0, MYF(MY_THREAD_SPECIFIC));
   if (!strcmp(ddl_log_entry->handler_name, reg_ext))
     frm_action= TRUE;
   else
@@ -3593,14 +3594,6 @@ mysql_prepare_create_table(THD *thd, HA_CREATE_INFO *create_info,
       record_offset+= sql_field->pack_length;
     if (sql_field->flags & VERS_SYSTEM_FIELD)
       continue;
-    if (sql_field->invisible == INVISIBLE_USER &&
-        sql_field->flags & NOT_NULL_FLAG &&
-        sql_field->flags & NO_DEFAULT_VALUE_FLAG)
-    {
-      my_error(ER_INVISIBLE_NOT_NULL_WITHOUT_DEFAULT, MYF(0),
-                          sql_field->field_name.str);
-      DBUG_RETURN(TRUE);
-    }
   }
   /* Update virtual fields' offset and give error if
      All fields are invisible */
@@ -4214,7 +4207,8 @@ mysql_prepare_create_table(THD *thd, HA_CREATE_INFO *create_info,
         !sql_field->has_default_function() &&
         (sql_field->flags & NOT_NULL_FLAG) &&
         (!sql_field->is_timestamp_type() ||
-         opt_explicit_defaults_for_timestamp))
+         opt_explicit_defaults_for_timestamp)&&
+        !sql_field->vers_sys_field())
     {
       sql_field->flags|= NO_DEFAULT_VALUE_FLAG;
       sql_field->pack_flag|= FIELDFLAG_NO_DEFAULT;
@@ -4242,6 +4236,14 @@ mysql_prepare_create_table(THD *thd, HA_CREATE_INFO *create_info,
       */
 
       my_error(ER_INVALID_DEFAULT, MYF(0), sql_field->field_name.str);
+      DBUG_RETURN(TRUE);
+    }
+    if (sql_field->invisible == INVISIBLE_USER &&
+        sql_field->flags & NOT_NULL_FLAG &&
+        sql_field->flags & NO_DEFAULT_VALUE_FLAG)
+    {
+      my_error(ER_INVISIBLE_NOT_NULL_WITHOUT_DEFAULT, MYF(0),
+                          sql_field->field_name.str);
       DBUG_RETURN(TRUE);
     }
   }

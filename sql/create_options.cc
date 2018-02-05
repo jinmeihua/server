@@ -730,7 +730,7 @@ uchar *engine_option_value::frm_read(const uchar *buff, const uchar *buff_end,
   @retval FALSE OK
 */
 
-bool engine_table_options_frm_read(const uchar *buff, uint length,
+bool engine_table_options_frm_read(const uchar *buff, size_t length,
                                    TABLE_SHARE *share)
 {
   const uchar *buff_end= buff + length;

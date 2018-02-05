@@ -1189,7 +1189,8 @@ int TABLE_SHARE::init_from_binary_frm_image(THD *thd, bool write,
   enum legacy_db_type legacy_db_type;
   my_bitmap_map *bitmaps;
   bool null_bits_are_used;
-  uint vcol_screen_length, UNINIT_VAR(options_len);
+  uint vcol_screen_length;
+  size_t UNINIT_VAR(options_len);
   uchar *vcol_screen_pos;
   const uchar *options= 0;
   size_t UNINIT_VAR(gis_options_len);
@@ -1710,7 +1711,7 @@ int TABLE_SHARE::init_from_binary_frm_image(THD *thd, bool write,
       for (count= 0; count < interval->count; count++)
       {
         char *val= (char*) interval->type_names[count];
-        interval->type_lengths[count]= strlen(val);
+        interval->type_lengths[count]= (uint)strlen(val);
       }
       interval->type_lengths[count]= 0;
     }
@@ -3863,7 +3864,7 @@ void prepare_frm_header(THD *thd, uint reclength, uchar *fileinfo,
   if (create_info->min_rows > UINT_MAX32)
     create_info->min_rows= UINT_MAX32;
 
-  uint key_length, tmp_key_length, tmp, csid;
+  size_t key_length, tmp_key_length, tmp, csid;
   bzero((char*) fileinfo, FRM_HEADER_SIZE);
   /* header */
   fileinfo[0]=(uchar) 254;

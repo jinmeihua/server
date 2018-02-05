@@ -90,7 +90,7 @@ buf_read_page_handle_error(
 	mutex_exit(&buf_pool->LRU_list_mutex);
 
 	ut_ad(buf_pool->n_pend_reads > 0);
-	my_atomic_addlint(buf_pool->n_pend_reads, -1);
+	my_atomic_addlint(&buf_pool->n_pend_reads, -1);
 }
 
 /** Low-level function which reads a page asynchronously from a file to the

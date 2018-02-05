@@ -4384,16 +4384,17 @@ evict_from_pool:
 			ut_ad(!fix_block->page.oldest_modification);
 			mutex_enter(&buf_pool->LRU_list_mutex);
 			buf_block_unfix(fix_block);
-			buf_page_mutex_enter(fix_block);
+			mutex_enter(fix_mutex);
 
 			if (!buf_LRU_free_page(&fix_block->page, true)) {
-				buf_page_mutex_exit(fix_block);
 				mutex_exit(&buf_pool->LRU_list_mutex);
+				mutex_exit(fix_mutex);
 				ut_ad(0);
 			}
 
 			return(NULL);
 		}
+
 		break;
 
 	case BUF_BLOCK_ZIP_PAGE:

@@ -2328,6 +2328,8 @@ struct buf_pool_t{
 					a corresponding individual page_hash
 					latch. */
 
+	ib_mutex_t			tmp_arr_mutex;
+
 	buf_tmp_array_t*		tmp_arr;
 					/*!< Array for temporal memory
 					used in compression and encryption */

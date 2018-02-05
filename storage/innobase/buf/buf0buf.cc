@@ -1717,6 +1717,7 @@ buf_pool_init_instance(
 	mutex_create(LATCH_ID_BUF_POOL_ZIP, &buf_pool->zip_mutex);
 	mutex_create(
 		LATCH_ID_BUF_POOL_FLUSH_STATE, &buf_pool->flush_state_mutex);
+	mutex_create(LATCH_ID_BUF_TMP_ARR, &buf_pool->tmp_arr_mutex);
 
 	new(&buf_pool->allocator)
 		ut_allocator<unsigned char>(mem_key_buf_buf_pool);
@@ -1872,6 +1873,7 @@ buf_pool_free_instance(
 	mutex_free(&buf_pool->flush_state_mutex);
 	mutex_free(&buf_pool->zip_mutex);
 	mutex_free(&buf_pool->flush_list_mutex);
+	mutex_free(&buf_pool->tmp_arr_mutex);
 
 	if (buf_pool->flush_rbt) {
 		rbt_free(buf_pool->flush_rbt);
@@ -2766,6 +2768,7 @@ withdraw_retry:
 		mutex_enter(&(buf_pool_from_array(i)->free_list_mutex));
 		mutex_enter(&(buf_pool_from_array(i)->zip_hash_mutex));
 		mutex_enter(&(buf_pool_from_array(i)->flush_state_mutex));
+		mutex_enter(&(buf_pool_from_array(i)->tmp_arr_mutex));
 	}
 
 	buf_chunk_map_reg = UT_NEW_NOKEY(buf_pool_chunk_map_t());
@@ -2967,6 +2970,7 @@ calc_buf_pool_size:
 	for (ulint i = 0; i < srv_buf_pool_instances; ++i) {
 		buf_pool_t*	buf_pool = buf_pool_from_array(i);
 
+		mutex_exit(&buf_pool->tmp_arr_mutex);
 		mutex_exit(&buf_pool->flush_state_mutex);
 		mutex_exit(&buf_pool->zip_hash_mutex);
 		mutex_exit(&buf_pool->free_list_mutex);
@@ -4384,6 +4388,8 @@ evict_from_pool:
 			ut_ad(!fix_block->page.oldest_modification);
 			mutex_enter(&buf_pool->LRU_list_mutex);
 			buf_block_unfix(fix_block);
+			BPageMutex*	fix_mutex
+				= buf_page_get_mutex(&fix_block->page);
 			mutex_enter(fix_mutex);
 
 			if (!buf_LRU_free_page(&fix_block->page, true)) {
@@ -7205,6 +7211,7 @@ buf_pool_reserve_tmp_slot(
 	buf_tmp_buffer_t *free_slot=NULL;
 
 	/* Array is protected by buf_pool mutex */
+	mutex_enter(&buf_pool->tmp_arr_mutex);
 	//buf_pool_mutex_enter(buf_pool);
 
 	for(ulint i = 0; i < buf_pool->tmp_arr->n_slots; i++) {
@@ -7221,6 +7228,7 @@ buf_pool_reserve_tmp_slot(
 	free_slot->reserved = true;
 	/* Now that we have reserved this slot we can release
 	buf_pool mutex */
+	mutex_exit(&buf_pool->tmp_arr_mutex);
 	//buf_pool_mutex_exit(buf_pool);
 
 	/* Allocate temporary memory for encryption/decryption */

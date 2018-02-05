@@ -830,7 +830,7 @@ LatchDebug::check_order(
 	case SYNC_BUF_ZIP_FREE:
 	case SYNC_BUF_ZIP_HASH:
 	case SYNC_BUF_FLUSH_STATE:
-
+	case SYNC_BUF_TMP_ARR:
 		/* We can have multiple mutexes of this type therefore we
 		can only check whether the greater than condition holds. */
 
@@ -1311,6 +1311,9 @@ sync_latch_meta_init()
 
 	LATCH_ADD_MUTEX(BUF_POOL_FLUSH_STATE, SYNC_BUF_FLUSH_STATE,
 			buf_pool_flush_state_mutex_key);
+
+	LATCH_ADD_MUTEX(BUF_TMP_ARR, SYNC_BUF_TMP_ARR,
+			buf_pool_tmp_arr_mutex_key);
 
 	LATCH_ADD_MUTEX(BUF_POOL_ZIP, SYNC_BUF_BLOCK, buf_pool_zip_mutex_key);
 

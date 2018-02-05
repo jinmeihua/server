@@ -217,9 +217,12 @@ int parse_proxy_protocol_header(NET *net, proxy_peer_info *peer_info)
     ushort trail_len= ((ushort)hdr[PROXY_V2_HEADER_LEN-2] >> 8) + hdr[PROXY_V2_HEADER_LEN-1];
     if (trail_len > sizeof(hdr) - PROXY_V2_HEADER_LEN)
       return -1;
-    len= vio_read(vio,  hdr + PROXY_V2_HEADER_LEN, trail_len);
-    if (len < 0)
-      return -1;
+    if (trail_len > 0)
+    {
+      len= vio_read(vio,  hdr + PROXY_V2_HEADER_LEN, trail_len);
+      if (len < 0)
+        return -1;
+    }
     pos= PROXY_V2_HEADER_LEN + trail_len;
     if (parse_v2_header(hdr, pos, peer_info))
       return -1;
